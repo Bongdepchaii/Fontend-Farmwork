@@ -1,2 +1,2 @@
-# Duan_XDTW_FPOLY
-dự án ASM xây dựng trang web - FPOLY
+# Lập trình Fontend Farmwork
+Học ngôn ngữ vue - FPOLY
