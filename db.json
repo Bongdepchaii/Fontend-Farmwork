@@ -1,0 +1,93 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "a title",
+      "creator": "admin",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vulputate vitae eros ac convallis. Nullam imperdiet quam nec dui facilisis blandit. Duis vehicula semper orci, at efficitur sapien aliquet eu. In dui tortor, imperdiet in est sit amet, placerat commodo erat. Nam id lorem ac nisl egestas rhoncus. Integer vitae vehicula dui, vel commodo enim. Fusce varius ultrices tellus. Mauris nec ante bibendum, sagittis quam ut, dignissim est. Praesent ornare mi at lectus maximus, at tristique lacus dictum. Vestibulum vulputate nisl sit amet quam tincidunt, vel congue lorem lacinia. Mauris iaculis, sem at venenatis vehicula, augue nisi sollicitudin turpis, a pellentesque nibh mauris sit amet felis",
+      "tags": "news, tutorial",
+      "time": 5
+    },
+    {
+      "id": "3",
+      "title": "a title",
+      "creator": "admin",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vulputate vitae eros ac convallis. Nullam imperdiet quam nec dui facilisis blandit. Duis vehicula semper orci, at efficitur sapien aliquet eu. In dui tortor, imperdiet in est sit amet, placerat commodo erat. Nam id lorem ac nisl egestas rhoncus. Integer vitae vehicula dui, vel commodo enim. Fusce varius ultrices tellus. Mauris nec ante bibendum, sagittis quam ut, dignissim est. Praesent ornare mi at lectus maximus, at tristique lacus dictum. Vestibulum vulputate nisl sit amet quam tincidunt, vel congue lorem lacinia. Mauris iaculis, sem at venenatis vehicula, augue nisi sollicitudin turpis, a pellentesque nibh mauris sit amet felis",
+      "tags": "news, tutorial",
+      "time": 5
+    },
+    {
+      "id": "4",
+      "title": "a title",
+      "creator": "admin",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vulputate vitae eros ac convallis. Nullam imperdiet quam nec dui facilisis blandit. Duis vehicula semper orci, at efficitur sapien aliquet eu. In dui tortor, imperdiet in est sit amet, placerat commodo erat. Nam id lorem ac nisl egestas rhoncus. Integer vitae vehicula dui, vel commodo enim. Fusce varius ultrices tellus. Mauris nec ante bibendum, sagittis quam ut, dignissim est. Praesent ornare mi at lectus maximus, at tristique lacus dictum. Vestibulum vulputate nisl sit amet quam tincidunt, vel congue lorem lacinia. Mauris iaculis, sem at venenatis vehicula, augue nisi sollicitudin turpis, a pellentesque nibh mauris sit amet felis",
+      "tags": "news, tutorial",
+      "time": 5
+    },
+    {
+      "id": "2",
+      "title": "another title",
+      "creator": "admin",
+      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer vulputate vitae eros ac convallis. Nullam imperdiet quam nec dui facilisis blandit. Duis vehicula semper orci, at efficitur sapien aliquet eu. In dui tortor, imperdiet in est sit amet, placerat commodo erat. Nam id lorem ac nisl egestas rhoncus. Integer vitae vehicula dui, vel commodo enim. Fusce varius ultrices tellus. Mauris nec ante bibendum, sagittis quam ut, dignissim est. Praesent ornare mi at lectus maximus, at tristique lacus dictum. Vestibulum vulputate nisl sit amet quam tincidunt, vel congue lorem lacinia. Mauris iaculis, sem at venenatis vehicula, augue nisi sollicitudin turpis, a pellentesque nibh mauris sit amet felis",
+      "tags": "trips",
+      "time": 3
+    }
+  ],
+  "products": [
+    {
+      "id": "3",
+      "title": "Running Shoes",
+      "price": 59,
+      "category": "Fashion",
+      "image": "https://picsum.photos/seed/shoes/120/120",
+      "description": "Breathable mesh, cushioned sole."
+    },
+    {
+      "id": "4",
+      "title": "Bluetooth Speaker",
+      "price": 39.99,
+      "category": "Electronics",
+      "image": "https://picsum.photos/seed/speaker/120/120",
+      "description": "Portable, waterproof, deep bass."
+    },
+    {
+      "id": "5",
+      "title": "abc",
+      "price": 25.99,
+      "category": "Electronics",
+      "image": "https://picsum.photos/seed/speaker/120/120",
+      "description": "Portable, waterproof, deep bass."
+    },
+    {
+      "id": "6",
+      "title": "dèf",
+      "price": 32.99,
+      "category": "Electronics",
+      "image": "https://picsum.photos/seed/speaker/120/120",
+      "description": "Portable, waterproof, deep bass."
+    },
+    {
+      "id": "7",
+      "title": "Stainless Water Bottle",
+      "price": 15.75,
+      "category": "Sports",
+      "image": "https://picsum.photos/seed/bottle/120/120",
+      "description": "Vacuum insulated, 750ml."
+    }
+  ],
+  "comments": [
+    {
+      "id": "1",
+      "text": "a comment about post 1",
+      "postId": "1"
+    },
+    {
+      "id": "2",
+      "text": "another comment about post 1",
+      "postId": "1"
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
