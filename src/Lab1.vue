@@ -10,7 +10,7 @@ import { ref } from "vue"
             </div>
             <div class="col-md-9 content">
                 <h1>BÙI TRỌNG THÀNH</h1>
-                <h2>Lập trình web</h2>
+                <p style="font-size: 1.1rem; font-weight: 500;">Lập trình web</p>
                 <p>Tôi tên đầy đủ là Bùi Trọng Thành, năm nay tôi 19 tuổi, quê ở Thái Bình, đang sinh sống ở Đắk Lắk, là
                     một sinh viên của trường FPT Polytechnic
                     với chuyên nghành là lập trình web, hiện tại tôi là sinh viên năm hai, sau khi ra trường Fpoly thi
@@ -37,7 +37,7 @@ import { ref } from "vue"
         <hr>
         <div class="row card-3">
             <h2><i class="fa-solid fa-code-branch"></i> KỸ NĂNG</h2>
-            <div class="col-md-6">
+            <div class="col-md-6 card-3">
                 <ul style="margin-bottom: 0; padding-left: 0;">
                     <li>HTML</li>
                     <div class="progress mb-2" @mousedown="startDrag($event, 'html')"
@@ -93,8 +93,8 @@ import { ref } from "vue"
             <h2><i class="fa-solid fa-briefcase"></i> KINH NGHIỆM VÀ LÀM VIỆC</h2>
         </div>
         <div class="row card-4">
-            <h3><i class="fa-regular fa-building"></i> Business Analyst (Chuyên viên Phân tích Kinh doanh)</h3>
-            <p>Năm 2028 - Nay</p>
+            <h3>1. Business Analyst (Chuyên viên Phân tích Kinh doanh)</h3>
+            <p class="content-card-4">Năm 2028 - Nay</p>
             <ul>
                 <li>Thiết kế giao diện website theo layout khách hàng họ yêu cầu</li>
                 <li>Phối hợp với các thành viên trong nhóm để hoàn thiện dự án</li>
@@ -103,8 +103,8 @@ import { ref } from "vue"
             </ul>
         </div>
         <div class="row card-4">
-            <h3><i class="fa-regular fa-building"></i> IT Green (chuyên nghiệp nâng tầm thương hiệu)</h3>
-            <p>Năm 2025 - 2028</p>
+            <h3>2. IT Green (chuyên nghiệp nâng tầm thương hiệu)</h3>
+            <p class="content-card-4">Năm 2025 - 2028</p>
             <ul>
                 <li>Phát triển các ứng dụng của trang web</li>
                 <li>Tối ưu hoá hiệu ứng và code của website</li>
@@ -137,15 +137,15 @@ img {
 
 h1 {
     /* font-family: "Alumni Sans Pinstripe", sans-serif; */
-    font-weight: 500 !important;
+    font-weight: bold !important;
     /* font-style: italic; */
     font-size: 1.5rem !important;
 }
 
 
 h2 {
-    font-size: 1.2rem !important;
-    color: rgb(72, 72, 255) !important;
+    font-size: 1.3rem !important;
+    color: black!important;
     font-weight: bold !important;
 }
 
@@ -198,6 +198,15 @@ div.content-2 ul li{
 
 div.card-4 ul li{
     list-style:inside !important;
+}
+
+p.content-card-4{
+    margin: 5px 0px;
+    color:rgb(90, 54, 255) !important;
+}
+
+div.card-3 ul li{
+    margin: 5px 0px;
 }
 </style>
 

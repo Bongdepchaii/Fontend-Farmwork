@@ -11,9 +11,9 @@ import product from '../templates/product.vue'
 
 <template>
   <!-- <bai3/> -->
-  <!-- <lab1/> -->
+  <lab1/>
    <!-- <posts/> -->
-   <product/>
+   <!-- <product/> -->
 </template>
 
 <!-- <style scoped>
