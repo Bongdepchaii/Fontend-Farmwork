@@ -5,8 +5,7 @@ import { ref } from "vue"
     <div class="container">
         <div class="row">
             <div class="col-md-3 wrapper">
-                <img src="../images/lab1-avt.jpg"
-                    alt="">
+                <img src="../images/lab1-avt.jpg" alt="">
             </div>
             <div class="col-md-9 content">
                 <h1>BÙI TRỌNG THÀNH</h1>
@@ -23,14 +22,18 @@ import { ref } from "vue"
                 <ul style="margin-bottom: 0;">
                     <li><i class="fa-solid fa-envelope"></i> <a href=""> Thanhbtps46198@gmail.com</a></li>
                     <li><i class="fa-solid fa-location-dot"></i><a href=""> Buon Trap - Xa Cu M'Gar - Dak Lak</a></li>
-                    <li><i class="fa-brands fa-facebook"></i> <a href="">Thanh Bui</a></li>
+                    <li><i class="fa-solid fa-phone"></i><a href=""> 0911616212</a></li>
+
                 </ul>
             </div>
             <div class="col-md-5 content-2">
                 <ul style="margin-bottom: 0;">
-                    <li><i class="fa-brands fa-instagram"></i><a href=""> 05_thanh</a></li>
-                    <li><i class="fa-brands fa-tiktok"></i><a href=""> Best.thanh</a></li>
-                    <li><i class="fa-solid fa-phone"></i><a href=""> 0911616212</a></li>
+                    <li><i class="fa-brands fa-facebook"></i> <a href="https://www.facebook.com/05.thanh/">
+                            https://www.facebook.com/05.thanh</a></li>
+                    <li><i class="fa-brands fa-instagram"></i><a href="https://www.instagram.com/05_thanh/">
+                            https://www.instagram.com/05_thanh</a></li>
+                    <li><i class="fa-brands fa-tiktok"></i><a href="https://www.tiktok.com/@best.thanh">
+                            https://www.tiktok.com/@best.thanh</a></li>
                 </ul>
             </div>
         </div>
@@ -42,22 +45,22 @@ import { ref } from "vue"
                     <li>HTML</li>
                     <div class="progress mb-2" @mousedown="startDrag($event, 'html')"
                         @mousemove="onDrag($event, 'html')" @mouseup="stopDrag">
-                        <div class="progress-bar" :style="{ width: html + '%' }" :aria-valuenow="html"
-                            aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar" :style="{ width: html + '%' }" :aria-valuenow="html" aria-valuemin="0"
+                            aria-valuemax="100">
                         </div>
                     </div>
                     <li>CSS</li>
-                    <div class="progress mb-2" @mousedown="startDrag($event, 'css')"
-                        @mousemove="onDrag($event, 'css')" @mouseup="stopDrag">
-                        <div class="progress-bar" :style="{ width: css + '%' }" :aria-valuenow="css"
-                            aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress mb-2" @mousedown="startDrag($event, 'css')" @mousemove="onDrag($event, 'css')"
+                        @mouseup="stopDrag">
+                        <div class="progress-bar" :style="{ width: css + '%' }" :aria-valuenow="css" aria-valuemin="0"
+                            aria-valuemax="100">
                         </div>
                     </div>
                     <li>JavaScript</li>
-                    <div class="progress mb-2" @mousedown="startDrag($event, 'js')"
-                        @mousemove="onDrag($event, 'js')" @mouseup="stopDrag">
-                        <div class="progress-bar" :style="{ width: js + '%' }" :aria-valuenow="js"
-                            aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress mb-2" @mousedown="startDrag($event, 'js')" @mousemove="onDrag($event, 'js')"
+                        @mouseup="stopDrag">
+                        <div class="progress-bar" :style="{ width: js + '%' }" :aria-valuenow="js" aria-valuemin="0"
+                            aria-valuemax="100">
                         </div>
                     </div>
                 </ul>
@@ -65,10 +68,10 @@ import { ref } from "vue"
             <div class="col-md-6">
                 <ul style="margin-bottom: 0; padding-left: 0;">
                     <li>MY SQL</li>
-                    <div class="progress mb-2" @mousedown="startDrag($event, 'sql')"
-                        @mousemove="onDrag($event, 'sql')" @mouseup="stopDrag">
-                        <div class="progress-bar" :style="{ width: sql + '%' }" :aria-valuenow="sql"
-                            aria-valuemin="0" aria-valuemax="100">  
+                    <div class="progress mb-2" @mousedown="startDrag($event, 'sql')" @mousemove="onDrag($event, 'sql')"
+                        @mouseup="stopDrag">
+                        <div class="progress-bar" :style="{ width: sql + '%' }" :aria-valuenow="sql" aria-valuemin="0"
+                            aria-valuemax="100">
                         </div>
                     </div>
                     <li>NodeJS</li>
@@ -79,10 +82,10 @@ import { ref } from "vue"
                         </div>
                     </div>
                     <li>PHP</li>
-                    <div class="progress mb-2" @mousedown="startDrag($event, 'php')"
-                        @mousemove="onDrag($event, 'php')" @mouseup="stopDrag">
-                        <div class="progress-bar" :style="{ width: php + '%' }" :aria-valuenow="php"
-                            aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress mb-2" @mousedown="startDrag($event, 'php')" @mousemove="onDrag($event, 'php')"
+                        @mouseup="stopDrag">
+                        <div class="progress-bar" :style="{ width: php + '%' }" :aria-valuenow="php" aria-valuemin="0"
+                            aria-valuemax="100">
                         </div>
                     </div>
                 </ul>
@@ -113,15 +116,11 @@ import { ref } from "vue"
             </ul>
         </div>
     </div>
-    <div class="container">
-
-    </div>
 </template>
 
 <!-- css -->
 
 <style>
-
 body {
     margin: 0;
     padding: 0;
@@ -145,11 +144,11 @@ h1 {
 
 h2 {
     font-size: 1.3rem !important;
-    color: black!important;
+    color: black !important;
     font-weight: bold !important;
 }
 
-h3{
+h3 {
     font-size: 1.2rem !important;
 }
 
@@ -191,22 +190,34 @@ div.card-2 a:hover {
     transition: 0.2s !important;
 }
 
-div.content-2 ul li{
+div.content-2 ul li {
     color: white;
     margin: 7px;
 }
 
-div.card-4 ul li{
-    list-style:inside !important;
+div.card-4 ul li {
+    list-style: inside !important;
 }
 
-p.content-card-4{
+p.content-card-4 {
     margin: 5px 0px;
-    color:rgb(90, 54, 255) !important;
+    color: gray !important;
+    font-size: 0.9rem !important;
+    font-weight: 400;
 }
 
-div.card-3 ul li{
+div.card-3 ul li {
     margin: 5px 0px;
+}
+
+.progress-bar {
+    background-color: rgb(66, 66, 66) !important;
+}
+
+hr {
+    border: 2px solid black !important;
+    margin: 25px 0px !important;
+    border-radius: 20px;
 }
 </style>
 
@@ -223,31 +234,31 @@ let dragging = ref(false);
 let currentField = ref(null);
 
 function startDrag(event, field) {
-  dragging.value = true;
-  currentField.value = field;
-  updateValue(event, field);
+    dragging.value = true;
+    currentField.value = field;
+    updateValue(event, field);
 }
 
 function onDrag(event, field) {
-  if (!dragging.value || currentField.value !== field) return;
-  updateValue(event, field);
+    if (!dragging.value || currentField.value !== field) return;
+    updateValue(event, field);
 }
 
 function stopDrag() {
-  dragging.value = false;
-  currentField.value = null;
+    dragging.value = false;
+    currentField.value = null;
 }
 
 function updateValue(event, field) {
-  const progressBar = event.currentTarget;
-  const rect = progressBar.getBoundingClientRect();
-  const percent = ((event.clientX - rect.left) / rect.width) * 100;
-  const value = Math.max(0, Math.min(100, Math.round(percent)));
+    const progressBar = event.currentTarget;
+    const rect = progressBar.getBoundingClientRect();
+    const percent = ((event.clientX - rect.left) / rect.width) * 100;
+    const value = Math.max(0, Math.min(100, Math.round(percent)));
 
-  if (field === "html") html.value = value;
-  if (field === "css") css.value = value;
-  if (field === "js") js.value = value;
-  if (field === "sql") sql.value = value;
-  if (field === "nodejs") nodejs.value = value;
-  if (field === "php") php.value = value;
+    if (field === "html") html.value = value;
+    if (field === "css") css.value = value;
+    if (field === "js") js.value = value;
+    if (field === "sql") sql.value = value;
+    if (field === "nodejs") nodejs.value = value;
+    if (field === "php") php.value = value;
 }</script>

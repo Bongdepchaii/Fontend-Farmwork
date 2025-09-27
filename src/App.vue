@@ -3,6 +3,7 @@
 // import TheWelcome from './components/TheWelcome.vue'
 import bai3 from './Bai3.vue'
 import lab1 from './Lab1.vue'
+import lab2 from './Lab2.vue'
 import posts from '../templates/posts.vue'
 import product from '../templates/product.vue'
 
@@ -11,7 +12,8 @@ import product from '../templates/product.vue'
 
 <template>
   <!-- <bai3/> -->
-  <lab1/>
+  <!-- <lab1/> -->
+  <lab2/>
    <!-- <posts/> -->
    <!-- <product/> -->
 </template>
