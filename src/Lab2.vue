@@ -43,6 +43,11 @@ const giam = () => {
              </div>
         </center>
     </div>
+    <div class="container">
+        <center>
+            
+        </center>
+    </div>
 </template>
 <style>
 .lab-2 button{
