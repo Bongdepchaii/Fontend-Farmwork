@@ -16,6 +16,7 @@
     "bootstrap": "^5.3.8",
     "json": "^11.0.0",
     "server": "^1.0.42",
+    "sever": "^0.0.2",
     "vue": "^3.5.18"
   },
   "devDependencies": {

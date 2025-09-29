@@ -7,10 +7,10 @@ const message = ref('')
 const successfly = ref(false)
 
 const login = () => {
-    if(username.value = ""){
+    if(username.value === ""){
         message.value = "Tai khoan khong duoc de trong"
     }
-    else if (password.value = ""){
+    else if (password.value === ""){
         message.value = "Mat khau khong duoc de trong"
     }
     else if (username.value === "Admin" && password.value === "Abcd@1234"){
@@ -26,17 +26,11 @@ const login = () => {
 </script>
 <template>
         <form action="">
-            <label for="">Tai khoan
-                <input type="text" v-model="username">
-            </label>
-            <br>
-            <label for="">Mat khau
-                <input type="password" v-model="password">
-            </label>
-            <br>
+            <h1>LOGIN</h1>
+                <input type="text" v-model="username" placeholder="Tai khoan">
+                <input type="password" v-model="password" placeholder="Mat khau">
             <input class="btn btn-primary" @click="login" type="button" value="Dang nhap">
-            <br>
-            <span :class="{ sucesss: successfly, error: !successfly}">{{ message }}</span>
+            <span :class="{ sucess: successfly, error: !successfly}">{{ message }}</span>
         </form>
 </template>
 
@@ -44,14 +38,16 @@ const login = () => {
 form {
     width: 500px;
     margin: 0 auto;
-    border: 2px solid green;
+    border: 2px solid blue;
     padding: 20px;
+    margin-top: 50px;
 }
 form input {
     width: 100%;
     display: block;
     margin-top: 15px;
     padding: 7px;
+    margin-bottom: 15px;
 }
 
 .success {

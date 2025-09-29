@@ -2,17 +2,20 @@
 import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
 
+const edit = ref(false)
 const products = ref([])
 const product = reactive({
-  image: '',
   title: '',
+  image: '',
   category: '',
   price: '',
 })
 
+// Load du lieu
 onMounted(async () => {
   Loadulieu()
 })
+// Xoa du lieu
 const deleteProduct = async (id) => {
   //b1 
   const isConfirm = confirm(`bạn có muốn xoá id ${id} này không ?`)
@@ -20,13 +23,25 @@ const deleteProduct = async (id) => {
     //b2:
     const response = await axios.delete(`http://localhost:3000/products/${id}`);
     if (response.status == 200) {
-      //b3: load lại giao diện
       Loadulieu()
-      // posts.value = response.data
+      // Thong bao du lieu xoa bang code alert
       alert('Đã xoá')
     }
   }
 }
+
+// Edit du lieu
+const editproduct = (item) => {
+  item.title,
+    item.image,
+    item.category,
+    item.price,
+    item.description
+  Object.assign(product, item)
+  edit.value = true
+}
+
+// load du lieu
 const Loadulieu = async () => {
   console.log(`the component is now mounted.`)
   const response = await axios.get('http://localhost:3000/products');
@@ -34,32 +49,53 @@ const Loadulieu = async () => {
     products.value = response.data
   }
 }
+
+// load lai trang
 const handleSubmit = async () => {
+  // neu o title khong viet gi
   if (products.title === "") {
-    alert('title khong de trong')
-  }
-  const payload = {
-    title: products.title,
-    price: products.price,
-    image: products.image,
-    description: products.description,
-    creator: 'admin',
-    tags: 'news'
-  }
-  const response = await axios.post('http://localhost:3000/products', payload);
-  console.log(response);
-  if (response.status == 201) {
-    Loadulieu()
-    clearData()
-    alert('Đã thêm dữ liệu vào')
+    alert('Tieu de khong duoc de trong')
+    return
   }
 
+  if (edit.value) {
+    const response = await axios.put(`http://localhost:3000/products/${product.id}`, product)
+    if (response.status === 200) {
+      alert("Update thanh cong")
+      Loadulieu()
+      clearData()
+      edit.value = false
+    }
+  } else {
+
+    // Add data
+    const payload = {
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      category: product.category,
+      description: product.description,
+      // creator: 'admin',
+      // tags: 'news'
+    }
+    // Day du lieu vo db.json products
+    const response = await axios.post('http://localhost:3000/products', payload);
+    console.log(response);
+    if (response.status == 201) {
+      Loadulieu()
+      clearData()
+      alert('Da them du lieu')
+      edit.value = false
+    }
+  }
 }
 
 const clearData = () => {
   Object.assign(products, {
+    id: '',
     title: '',
-    time: '',
+    price: '',
+    category: '',
     image: '',
     description: ''
   })
@@ -72,6 +108,7 @@ const clearData = () => {
 //     products.value = response.data
 //   }
 // })
+
 </script>
 <template>
 
@@ -108,8 +145,9 @@ const clearData = () => {
                       <td><img class="product-thumb" :src="item.image" alt="product"></td>
                       <td>{{ item.title }}</td>
                       <td><span class="badge text-bg-dark">{{ item.category }}</span></td>
-                      <td class="text-end">{{ item.price }}</td>
-                      <td class="text-end"><button href="#editForm" class="btn btn-sm btn-outline-secondary">Edit
+                      <td class="text-end">{{ item.price }} $</td>
+                      <td class="text-end"><button @click="editproduct(item)" href="#editForm"
+                          class="btn btn-sm btn-outline-primary" style="margin-right: 4px;">Edit
                         </button>
                         <button @click="deleteProduct(item.id)" class="btn btn-sm btn-danger"> Delete</button>
                       </td>
@@ -129,17 +167,17 @@ const clearData = () => {
               <form @submit="handleSubmit" class="form">
                 <div class="mb-3">
                   <label for="pTitle" class="form-label">Title</label>
-                  <input v-model="post.title" type="text" class="form-control" id="pTitle" name="title"
+                  <input v-model="product.title" type="text" class="form-control" id="pTitle" name="title"
                     placeholder="Product title" required>
                 </div>
                 <div class="mb-3">
                   <label for="pPrice" class="form-label">Price (USD)</label>
-                  <input v-model="post.price" type="number" class="form-control" id="pPrice" name="price" step="0.01"
+                  <input v-model="product.price" type="number" class="form-control" id="pPrice" name="price" step="0.01"
                     min="0" placeholder="0.00" required>
                 </div>
                 <div class="mb-3">
                   <label for="pCategory" class="form-label">Category</label>
-                  <select id="pCategory" class="form-select" name="category" required>
+                  <select v-model="product.category" id="pCategory" class="form-select" name="category" required>
                     <option value="" selected>Choose...</option>
                     <option>Electronics</option>
                     <option>Home</option>
@@ -149,12 +187,12 @@ const clearData = () => {
                 </div>
                 <div class="mb-3">
                   <label for="pImage" class="form-label">Image URL</label>
-                  <input v-model="post.image" type="url" class="form-control" id="pImage" name="image"
+                  <input v-model="product.image" type="url" class="form-control" id="pImage" name="image"
                     placeholder="https://example.com/image.jpg" required>
                 </div>
                 <div class="mb-3">
                   <label for="pDesc" class="form-label">Description</label>
-                  <textarea id="pDesc" class="form-control" name="description" rows="3"
+                  <textarea v-model="product.description" id="pDesc" class="form-control" name="description" rows="3"
                     placeholder="Short product description" required></textarea>
                 </div>
 

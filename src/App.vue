@@ -12,12 +12,12 @@ import login from './Login.vue'
 </script>
 
 <template>
-  <login/>>
+  <!-- <login/>> -->
   <!-- <bai3/> -->
   <!-- <lab1/> -->
   <!-- <lab2/> -->
    <!-- <posts/> -->
-   <!-- <product/> -->
+   <product/>
 </template>
 
 <!-- <style scoped>
