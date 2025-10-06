@@ -5,8 +5,8 @@ import bai3 from './Bai3.vue'
 import lab1 from './Lab1.vue'
 import lab2 from './Lab2.vue'
 import posts from '../templates/posts.vue'
-import product from '../templates/product.vue'
-import login from './Login.vue'
+import product from './components/product.vue'
+import login from './components/Login.vue'
 
 
 </script>
@@ -17,8 +17,9 @@ import login from './Login.vue'
   <!-- <lab1/> -->
   <!-- <lab2/> -->
    <!-- <posts/> -->
-   <product/>
-</template>
+   <!-- <product/> -->
+   <router-view></router-view>
+  </template>
 
 <!-- <style scoped>
 header {
