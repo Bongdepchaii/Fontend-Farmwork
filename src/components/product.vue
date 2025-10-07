@@ -116,7 +116,8 @@ const clearData = () => {
     <header class="py-4 bg-white border-bottom mb-4">
       <div class="container d-flex align-items-center justify-content-between">
         <h1 class="h4 mb-0">MyShop</h1>
-        <a class="btn btn-primary" href="#editForm">Add / Edit Product</a>
+        <router-link to="Profile" class="btn btn-primary">Profile User</router-link>
+         <!-- <button class="btn btn-info" @click="goBack()">Admin</button> -->
       </div>
     </header>
     <main class="container pb-5">
@@ -126,7 +127,10 @@ const clearData = () => {
           <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
               <span class="fw-semibold">Products</span>
-              <small class="text-secondary">Simple static list (no JavaScript)</small>
+              <form action="">
+                  <input type="text" style="padding: 5px; border-radius: 5px; outline: none;" placeholder="Search...">
+                  <button style="padding: 5px; border-radius: 5px;" class="custom-file-label">Search</button>
+              </form>
             </div>
             <div class="card-body p-0">
               <div class="table-responsive">
@@ -213,7 +217,7 @@ const clearData = () => {
     <footer class="py-4 bg-dark text-white">
       <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
         <span>© <span id="year">2025</span> MyShop</span>
-        <a class="btn btn-outline-light btn-sm" href="#top">Back to top</a>
+        <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link>
       </div>
     </footer>
   </body>

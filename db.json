@@ -59,6 +59,22 @@
       "description": "Portable, waterproof, deep bass."
     },
     {
+      "id": "4",
+      "title": "Bluetooth Speaker",
+      "price": 39.99,
+      "category": "Electronics",
+      "image": "https://picsum.photos/seed/speaker/120/120",
+      "description": "Portable, waterproof, deep bass."
+    },
+    {
+      "id": "5",
+      "title": "abc",
+      "price": 25.99,
+      "category": "Electronics",
+      "image": "https://picsum.photos/seed/speaker/120/120",
+      "description": "Portable, waterproof, deep bass."
+    },
+    {
       "id": "6",
       "title": "dèf",
       "price": 32.99,
@@ -75,12 +91,36 @@
       "description": "Vacuum insulated, 750ml."
     },
     {
-      "title": "iPhone 17 pro max Orangee",
-      "image": "https://cdn2.cellphones.com.vn/358x/media/catalog/product/i/p/iphone_17_pro_512gb.jpg",
+      "id": "4fce",
+      "title": "iPhone 17p pro maxx",
+      "price": 1999,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaObjrH9mzLenSG44kOnHyPFFnS2flm7SvYg&s",
+      "category": "Home",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel"
+    },
+    {
+      "id": "3c1f",
+      "title": "iphone 15 pro max",
+      "price": 123,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaObjrH9mzLenSG44kOnHyPFFnS2flm7SvYg&s",
       "category": "Electronics",
-      "price": 1912,
-      "id": "1326",
-      "description": "iPhone 17 pro maxx Orange"
+      "description": "scasc"
+    },
+    {
+      "id": "d10c",
+      "title": "iphone 12",
+      "price": 123,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0Z4T-PFqYi0GSde_m8PtXMTDYpEbRYdFHzg&s",
+      "category": "Sports",
+      "description": "sấcc"
+    },
+    {
+      "id": "5980",
+      "title": "áccasa",
+      "price": 3,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaObjrH9mzLenSG44kOnHyPFFnS2flm7SvYg&s",
+      "category": "Home",
+      "description": "cấc"
     }
   ],
   "comments": [

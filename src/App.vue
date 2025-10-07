@@ -3,10 +3,11 @@
 // import TheWelcome from './components/TheWelcome.vue'
 import bai3 from './Bai3.vue'
 import lab1 from './Lab1.vue'
-import lab2 from './Lab2.vue'
+import bai2 from './Bai2.vue'
 import posts from '../templates/posts.vue'
 import product from './components/product.vue'
 import login from './components/Login.vue'
+import lab2 from './Lab2.vue'
 
 
 </script>
@@ -14,11 +15,12 @@ import login from './components/Login.vue'
 <template>
   <!-- <login/>> -->
   <!-- <bai3/> -->
+  <!-- <bai2/> -->
   <!-- <lab1/> -->
-  <!-- <lab2/> -->
+  <lab2/>
    <!-- <posts/> -->
    <!-- <product/> -->
-   <router-view></router-view>
+   <!-- <router-view></router-view> -->
   </template>
 
 <!-- <style scoped>

@@ -1,59 +1,93 @@
 <script setup>
-import { ref } from 'vue'
-const message = ref("Chua co tin nhan")
-const dem = ref(0)
-const hocluc = ref(0)
-const diemtoida = 10
+import { ref, reactive } from 'vue'
 
-const thaydoimessage = () => { message.value = "Ban da thay doi tin nhan"}
+const soluongtonkho = 15
+const product = ref(0)
+
 const tang = () => {
-    if (hocluc.value < diemtoida){
-        hocluc.value++
+    if (product.value < soluongtonkho) {
+        product.value++
     } else {
-        alert("Ban da dat diem toi da!")
+        alert("ban them qua so luong ton kho")
     }
 }
 const giam = () => {
-    if(hocluc.value >= 1){
-
-        hocluc.value--
+    if (product.value >= 1) {
+        product.value--
     } else {
-        alert ("Diem khong the am!")
+        alert("Khong duoc phep giam duoi 0")
     }
 }
+
+// Bai 2
+const user = reactive({
+    name: '',
+    age: null,
+    email: ''
+})
+
+const updateUser = () => {
+    if (!user.name || !user.email.includes('@')) {
+        alert('Dữ liệu không hợp lệ!')
+        return
+    }
+    alert('Cập nhật thành công!')
+}
+
+// Bai 3
+const oneWayText = ref('Đây là one-way binding')
+const twoWayText = ref('Đây là two-way binding')
+
 </script>
 <template>
+    <!-- Bai 1 -->
     <div class="container">
         <center class="lab-2">
-            <h1>Hien thi hoc luc</h1>
-            <p>{{ message }}</p>
-            <p class="dem">{{ dem }} | {{ hocluc }}</p>
-            <button class="btn btn-light" @click="thaydoimessage">Thay doi tin nhan</button>
-            <button class="btn btn-danger" @click="giam">Tru diem</button>
-            <button class="btn btn-success" @click="tang">Cong diem</button>
-            <hr>
-            <!-- if -->
-             <p v-if="hocluc < 3.5">Hoc luc Yeu</p>
-             <p v-else-if="hocluc < 5">Hoc luc trung binh</p>
-             <p v-else-if="hocluc < 6.5">Hoc luc kha</p>
-             <p v-else>Hoc luc gioi</p>
-             <div v-show="hocluc >= 10">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOv9mTpCuhDzYbYqgf_u8jzo7zRObKDrvDyQ&s" alt="hoc sinh xuat sac">
-                <p>Xin chuc mung ban la hoc sinh xuat sac</p>
-             </div>
+            <h1>Bai 1</h1>
+            <strong>iPhone 15 pro max - 256GB</strong>
+            <p>Color: Blue titan</p>
+            <p class="dem">So luong dang ton trong kho: {{ soluongtonkho }}</p>
+            <p>
+                <button class="btn btn-danger" @click="giam"> - </button>
+                <button class="btn btn-success" @click="tang">+</button>
+                <strong>{{ product }}</strong>
+            </p>
         </center>
     </div>
-    <div class="container">
+
+    <!-- Bai 2 -->
+    <!-- <div class="container">
         <center>
-            
+            <form @submit.prevent="updateUser">
+                <input v-model="user.name" placeholder="Tên">
+                <input v-model="user.age" placeholder="Tuổi" type="number">
+                <input v-model="user.email" placeholder="Email">
+                <button type="submit">Cập nhật</button>
+            </form>
         </center>
-    </div>
+    </div> -->
+
+    <!-- Bai 3 -->
+<!-- <div class="container">
+  <center>
+    <h2>Bài 3: One-way & Two-way Binding</h2>
+
+    <h4>One-way binding (chỉ hiển thị):</h4>
+    <p>{{ oneWayText }}</p>
+
+    <h4>Two-way binding (có thể chỉnh sửa):</h4>
+    <input v-model="twoWayText" placeholder="Nhập nội dung...">
+    <p>Kết quả: {{ twoWayText }}</p>
+  </center>
+</div> -->
+
 </template>
 <style>
-.lab-2 button{
+.lab-2 button {
     margin: 5px 5px;
 }
-.lab-2 .dem{
+
+.lab-2 .dem {
     font-weight: 500 !important;
     font-size: 1.3rem;
 }

@@ -5,13 +5,17 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Profile from './Lab1.vue'
 import Product from './components/product.vue'
+import ProductDetail from './components/Product-Detail.vue'
+import Index from './components/Index.vue'
 
 const routes = [
-    { path: '/', name: 'Home', component: Register, meta: { isAuth: false } },
+    { path: '/', name: 'Home', component: Login, meta: { isAuth: false } },
     { path: '/profile', name: 'Profile', component: Profile, meta: { isAuth: false}},
     { path: '/register', name: 'Register', component: Register, meta: { isAuth: false}},
     { path: '/login', name: 'Login', component: Login, meta: { isAuth: false}},
     { path: '/product', name: 'Product', component: Product, meta: { isAuth: false}},
+    { path: '/product-detail/:id', name: 'ProductDetail', component: ProductDetail, meta: { isAuth: false}},
+    { path: '/index', name: 'Index', component: Index, meta: { isAuth: false}},
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
@@ -28,7 +32,7 @@ const router = createRouter({
  * 
  */
 router.beforeEach((to, from, next) => {
-    const currentUser = localStorage.getItem('currentUser');
+    const currentUser = localStorage.getItem('user');
     if(to.meta.isAuth && currentUser){
         const user = JSON.parse(currentUser)
         console.log('user',user)
