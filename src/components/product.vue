@@ -50,6 +50,18 @@ const Loadulieu = async () => {
   }
 }
 
+// upload img
+const handleFileUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      product.image = e.target.result // ảnh được chuyển thành base64
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
 // load lai trang
 const handleSubmit = async () => {
   // neu o title khong viet gi
@@ -101,6 +113,12 @@ const clearData = () => {
   })
 }
 
+// logout
+const logout = () => {
+  localStorage.removeItem('userlogin')
+  router.push('Login')
+}
+
 // onMounted(async () => {
 //   console.log(`the component is now mounted.`)
 //   const response = await axios.get('http://localhost:3000/products');
@@ -115,9 +133,11 @@ const clearData = () => {
   <body>
     <header class="py-4 bg-white border-bottom mb-4">
       <div class="container d-flex align-items-center justify-content-between">
-        <h1 class="h4 mb-0">MyShop</h1>
-        <router-link to="Profile" class="btn btn-primary">Profile User</router-link>
-         <!-- <button class="btn btn-info" @click="goBack()">Admin</button> -->
+        <h1 class="h4 mb-0">TBS</h1>
+        <router-link to="Profile" class="btn btn-info">Profile</router-link>
+        <router-link to="Index" class="btn btn-primary">Home</router-link>
+        <router-link to="/" class="btn btn-danger" @click="logout()">Logout</router-link>
+        <!-- <button class="btn btn-info" @click="goBack()">Admin</button> -->
       </div>
     </header>
     <main class="container pb-5">
@@ -127,9 +147,10 @@ const clearData = () => {
           <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
               <span class="fw-semibold">Products</span>
+              <router-link to="Category" class="btn btn-dark">Create category</router-link>
               <form action="">
-                  <input type="text" style="padding: 5px; border-radius: 5px; outline: none;" placeholder="Search...">
-                  <button style="padding: 5px; border-radius: 5px;" class="custom-file-label">Search</button>
+                <input type="text" style="padding: 5px; border-radius: 5px; outline: none;" placeholder="Search...">
+                <button style="padding: 5px; border-radius: 5px;" class="custom-file-label">Search</button>
               </form>
             </div>
             <div class="card-body p-0">
@@ -190,9 +211,12 @@ const clearData = () => {
                   </select>
                 </div>
                 <div class="mb-3">
-                  <label for="pImage" class="form-label">Image URL</label>
-                  <input v-model="product.image" type="url" class="form-control" id="pImage" name="image"
-                    placeholder="https://example.com/image.jpg" required>
+                  <label for="pImage" class="form-label">Upload Img</label>
+                  <input @change="handleFileUpload" type="file" class="form-control">
+                  <div v-if="product.image" class="mt-2">
+                    <img :src="product.image" alt="Preview"
+                      style="width:100px;height:100px;object-fit:cover;border-radius:5px;">
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="pDesc" class="form-label">Description</label>
@@ -217,7 +241,7 @@ const clearData = () => {
     <footer class="py-4 bg-dark text-white">
       <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
         <span>© <span id="year">2025</span> MyShop</span>
-        <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link>
+        <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
       </div>
     </footer>
   </body>

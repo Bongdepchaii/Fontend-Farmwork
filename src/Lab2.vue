@@ -41,7 +41,7 @@ const twoWayText = ref('Đây là two-way binding')
 </script>
 <template>
     <!-- Bai 1 -->
-    <div class="container">
+    <!-- <div class="container">
         <center class="lab-2">
             <h1>Bai 1</h1>
             <strong>iPhone 15 pro max - 256GB</strong>
@@ -53,7 +53,7 @@ const twoWayText = ref('Đây là two-way binding')
                 <strong>{{ product }}</strong>
             </p>
         </center>
-    </div>
+    </div> -->
 
     <!-- Bai 2 -->
     <!-- <div class="container">
@@ -68,18 +68,18 @@ const twoWayText = ref('Đây là two-way binding')
     </div> -->
 
     <!-- Bai 3 -->
-<!-- <div class="container">
+<div class="container">
   <center>
     <h2>Bài 3: One-way & Two-way Binding</h2>
 
-    <h4>One-way binding (chỉ hiển thị):</h4>
+    <h4>One-way binding</h4>
     <p>{{ oneWayText }}</p>
 
-    <h4>Two-way binding (có thể chỉnh sửa):</h4>
-    <input v-model="twoWayText" placeholder="Nhập nội dung...">
+    <h4>Two-way binding</h4>
+    <input v-model="twoWayText" placeholder="Nhap...">
     <p>Kết quả: {{ twoWayText }}</p>
   </center>
-</div> -->
+</div>
 
 </template>
 <style>

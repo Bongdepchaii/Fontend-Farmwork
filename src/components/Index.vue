@@ -53,6 +53,10 @@ watch(search, () => {
 onMounted(() => {
   loaddata()
 })
+
+const logout = () => {
+  localStorage.removeItem('userlogin')
+}
 </script>
 
 <template>
@@ -61,6 +65,7 @@ onMounted(() => {
       <header class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 m-0">List Products</h1>
         <RouterLink to="Product" class="btn btn-success">Admin</RouterLink>
+        <RouterLink to="Login" class="btn btn-outline-danger" @click="logout()">Logout</RouterLink>
         <form class="d-none d-sm-flex" role="search" @submit.prevent>
           <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
         </form>

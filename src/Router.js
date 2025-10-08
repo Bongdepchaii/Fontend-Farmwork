@@ -7,6 +7,7 @@ import Profile from './Lab1.vue'
 import Product from './components/product.vue'
 import ProductDetail from './components/Product-Detail.vue'
 import Index from './components/Index.vue'
+import Category from './components/Category.vue'
 
 const routes = [
     { path: '/', name: 'Home', component: Login, meta: { isAuth: false } },
@@ -14,6 +15,7 @@ const routes = [
     { path: '/register', name: 'Register', component: Register, meta: { isAuth: false}},
     { path: '/login', name: 'Login', component: Login, meta: { isAuth: false}},
     { path: '/product', name: 'Product', component: Product, meta: { isAuth: false}},
+    { path: '/category', name: 'Category', component: Category, meta: { isAuth: false}},
     { path: '/product-detail/:id', name: 'ProductDetail', component: ProductDetail, meta: { isAuth: false}},
     { path: '/index', name: 'Index', component: Index, meta: { isAuth: false}},
     {

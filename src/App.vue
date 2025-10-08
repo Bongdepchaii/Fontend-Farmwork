@@ -17,10 +17,10 @@ import lab2 from './Lab2.vue'
   <!-- <bai3/> -->
   <!-- <bai2/> -->
   <!-- <lab1/> -->
-  <lab2/>
+  <!-- <lab2/> -->
    <!-- <posts/> -->
    <!-- <product/> -->
-   <!-- <router-view></router-view> -->
+   <router-view></router-view>
   </template>
 
 <!-- <style scoped>
