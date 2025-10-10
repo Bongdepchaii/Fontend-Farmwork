@@ -56,12 +56,12 @@ const Register = () => {
 <template>
     <form action="">
         <h1>DANG KY</h1>
-        <input type="text" v-model="name" placeholder="Ho va ten">
-        <input type="date" v-model="birthday" placeholder="Ngay sinh">
-        <input type="tel" v-model="phone" placeholder="So dien thoai">
-        <input type="text" v-model="username" placeholder="Tai khoan">
-        <input type="password" v-model="password" placeholder="Mat khau">
-        <input type="password" v-model="confirm" placeholder="Xac thuc mat khau">
+        <input  class="form-control" type="text" v-model="name" placeholder="Ho va ten">
+        <input  class="form-control" type="date" v-model="birthday" placeholder="Ngay sinh">
+        <input class="form-control" type="tel" v-model="phone" placeholder="So dien thoai">
+        <input class="form-control" type="text" v-model="username" placeholder="Tai khoan">
+        <input class="form-control" type="password" v-model="password" placeholder="Mat khau">
+        <input class="form-control" type="password" v-model="confirm" placeholder="Xac thuc mat khau">
         <router-link to="Login">Ban co tai khoan?</router-link>
         <input class="btn btn-primary" @click="Register" type="button" value="Dang ky ngay">
         <span class="success">{{ message }}</span>
