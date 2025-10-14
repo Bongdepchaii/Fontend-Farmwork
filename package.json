@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
     "install": "^0.13.0",

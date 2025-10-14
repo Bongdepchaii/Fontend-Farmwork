@@ -48,8 +48,8 @@ const login = () => {
 <template>
     <form action="">
         <h1>DANG NHAP</h1>
-        <input type="text" v-model="username" placeholder="Tai khoan">
-        <input type="password" v-model="password" placeholder="Mat khau">
+        <input class="form-control" type="text" v-model="username" placeholder="Tai khoan">
+        <input  class="form-control" type="password" v-model="password" placeholder="Mat khau">
         <router-link to="Register">Ban chua co tai khoan?</router-link>
         <input class="btn btn-primary" @click="login" type="button" value="Dang nhap">
         <span class="message">{{ message }}</span>
