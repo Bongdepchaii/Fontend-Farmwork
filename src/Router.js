@@ -34,7 +34,7 @@ const router = createRouter({
  * 
  */
 router.beforeEach((to, from, next) => {
-    const currentUser = localStorage.getItem('user');
+    const currentUser = localStorage.getItem('userlogin');
     if(to.meta.isAuth && currentUser){
         const user = JSON.parse(currentUser)
         console.log('user',user)
@@ -43,7 +43,7 @@ router.beforeEach((to, from, next) => {
     } else {
         next();
     }
-    next()
+    // next()
 })
 
 export default router

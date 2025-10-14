@@ -8,6 +8,8 @@ import posts from '../templates/posts.vue'
 import product from './components/product.vue'
 import login from './components/Login.vue'
 import lab2 from './Lab2.vue'
+import store from './components/Store.vue'
+// import router from './Router'
 
 
 </script>
@@ -20,6 +22,7 @@ import lab2 from './Lab2.vue'
   <!-- <lab2/> -->
    <!-- <posts/> -->
    <!-- <product/> -->
+    <!-- <store/> -->
    <router-view></router-view>
   </template>
 

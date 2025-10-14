@@ -1,12 +1,14 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 const Product = ref([])
 const total = ref(0)
 const search = ref('')
 const page = ref(1)
-const pagesize = 5
+const pagesize = 10
 
 const totalpage = computed(() => Math.ceil(total.value / pagesize))
 
@@ -54,53 +56,115 @@ onMounted(() => {
   loaddata()
 })
 
+
+// Check admin
+const isadmin = computed (() => {
+  const userlogin = localStorage.getItem('userlogin');
+  if (!userlogin){
+    return false;
+  }
+  try{
+    const user = JSON.parse(userlogin);
+    return user && user.role === 'admin';
+  } catch (error){
+    console.error("Loi userlogin tu local storage:", error);
+    return false
+  }
+})
+
+
+// Dang xuat
 const logout = () => {
-  localStorage.removeItem('userlogin')
+  if(confirm("Ban co chac chan muon dang xuat khong")){
+    localStorage.removeItem('userlogin')
+    router.push('/')
+  }
 }
 </script>
 
+<style scoped>
+img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+div nav li{
+  margin-left: 15px;
+}
+</style>
+
 <template>
   <main>
-    <div class="container py-2">
-      <header class="d-flex align-items-center justify-content-between mb-3">
-        <h1 class="h3 m-0">List Products</h1>
-        <RouterLink to="Product" class="btn btn-success">Admin</RouterLink>
+    <!-- <div class="container py-4 border-bottom mb-5">
+    <header style="margin-top: 30px;" class="d-flex align-items-center justify-content-between mb-3">
+      <RouterLink style="text-decoration: none;" to="Index"><h1 style="color: black;" class="h3 m-0">TBS</h1></RouterLink>
+      <div>
+        <RouterLink to="Product" class="btn btn-success me-2">Admin</RouterLink>
         <RouterLink to="Login" class="btn btn-outline-danger" @click="logout()">Logout</RouterLink>
-        <form class="d-none d-sm-flex" role="search" @submit.prevent>
-          <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
-        </form>
-      </header>
+      </div>
+      <form class="d-none d-sm-flex" role="search" @submit.prevent>
+        <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
+      </form>
+    </header>
+    </div>   -->
 
-      <div class="list-group">
-        <RouterLink
-          v-for="Item in Product"
-          :key="Item.id"
-          :to="`/product-detail/${Item.id}`"
-          class="list-group-item list-group-item-action py-3 ProductItem"
-        >
-          <div class="row g-3 align-items-start">
-            <div class="col-12 col-sm-auto">
-              <img :src="Item.image" alt="Post" class="post-thumb w-100 w-sm-auto" />
-            </div>
-            <div class="col">
-              <div class="d-flex w-100 justify-content-between">
-                <h2 class="h5 mb-1">{{ Item.title }}</h2>
-                <small class="text-muted">Price {{ Item.price }}$</small>
-              </div>
-              <div class="mb-2">
-                <small class="text-muted">By <strong>Admin</strong></small>
-              </div>
-              <p class="post-excerpt mb-2">
-                Lorem ipsum dolor sit amet... 
-              </p>
-              <div class="d-flex gap-2">
-                <span class="badge text-bg-secondary">{{ Item.category }}</span>
+    <div class="container py-4 border-bottom mb-5">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <RouterLink to="Index" style="font-size: 2rem;"  class="nav-link active" aria-current="page">TBS</RouterLink>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <RouterLink v-if="isadmin" to="product" class="nav-link active" aria-current="page">Admin</RouterLink>
+              </li>
+              <li class="nav-item">
+                       <RouterLink  class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</RouterLink>
+              </li>
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <div class="container py-2">
+      <div class="row g-4">
+        <div class="col-md-3" v-for="Item in Product" :key="Item.id">
+          <div class="card h-100 shadow-sm">
+            <RouterLink :to="`/product-detail/${Item.id}`" class="text-decoration-none text-dark">
+              <img :src="Item.image" class="card-img-top" :alt="Item.title" />
+            </RouterLink>
+            <div class="card-body d-flex flex-column">
+              <RouterLink :to="`/product-detail/${Item.id}`" class="text-decoration-none text-dark">
+                <h5 class="card-title">{{ Item.title }}</h5>
+                <p class="card-text text-muted">
+                  By <strong>Admin</strong>
+                  <span class="badge text-bg-secondary float-end">{{ Item.category }}</span>
+                </p>
+                <p class="card-text">
+                  Lorem ipsum dolor sit amet...
+                </p>
+              </RouterLink>
+              <div class="mt-auto d-flex justify-content-between align-items-center">
+                <h6 class="card-subtitle text-danger mb-0">Price: {{ Item.price }}$</h6>
+                <button class="btn btn-primary btn-sm">Add to cart</button>
               </div>
             </div>
           </div>
-        </RouterLink>
+        </div>
 
-        <div v-if="Product.length === 0" class="p-3 text-center text-muted">Không có sản phẩm</div>
+        <div v-if="Product.length === 0" class="col-12 p-3 text-center text-muted">
+          Không có sản phẩm
+        </div>
       </div>
 
       <nav aria-label="Post navigation" class="mt-4" v-if="totalpage > 1">
@@ -108,11 +172,9 @@ const logout = () => {
           <li class="page-item" :class="{ disabled: page === 1 }">
             <button class="page-link" @click="change_page(page - 1)" :disabled="page === 1">Previous</button>
           </li>
-
           <li class="page-item" v-for="p in totalpage" :key="p" :class="{ active: page === p }">
             <button class="page-link" @click="change_page(p)">{{ p }}</button>
           </li>
-
           <li class="page-item" :class="{ disabled: page === totalpage }">
             <button class="page-link" @click="change_page(page + 1)" :disabled="page === totalpage">Next</button>
           </li>

@@ -36,23 +36,28 @@
   "category": [
     {
       "idcategory": "C001",
-      "name": "iPhone"
+      "name": "iPhone",
+      "id": "43a7"
     },
     {
       "idcategory": "C002",
-      "name": "Samsung"
+      "name": "Samsung",
+      "id": "1610"
     },
     {
       "idcategory": "C003",
-      "name": "Dell"
+      "name": "Dell",
+      "id": "61c8"
     },
     {
       "idcategory": "C004",
-      "name": "Macbook"
+      "name": "Macbook",
+      "id": "d530"
     },
     {
       "idcategory": "C005",
-      "name": "Xiaomi"
+      "name": "Xiaomi",
+      "id": "8214"
     },
     {
       "id": "e80c",
@@ -76,30 +81,6 @@
       "id": "4",
       "title": "Bluetooth Speaker",
       "price": 39.99,
-      "category": "Electronics",
-      "image": "https://picsum.photos/seed/speaker/120/120",
-      "description": "Portable, waterproof, deep bass."
-    },
-    {
-      "id": "5",
-      "title": "abc",
-      "price": 25.99,
-      "category": "Electronics",
-      "image": "https://picsum.photos/seed/speaker/120/120",
-      "description": "Portable, waterproof, deep bass."
-    },
-    {
-      "id": "4",
-      "title": "Bluetooth Speaker",
-      "price": 39.99,
-      "category": "Electronics",
-      "image": "https://picsum.photos/seed/speaker/120/120",
-      "description": "Portable, waterproof, deep bass."
-    },
-    {
-      "id": "5",
-      "title": "abc",
-      "price": 25.99,
       "category": "Electronics",
       "image": "https://picsum.photos/seed/speaker/120/120",
       "description": "Portable, waterproof, deep bass."

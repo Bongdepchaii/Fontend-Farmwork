@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
 
+
+const router = useRouter()
 const edit = ref(false)
 const products = ref([])
 const product = reactive({
@@ -10,6 +13,7 @@ const product = reactive({
   category: '',
   price: '',
 })
+
 
 // Load du lieu
 onMounted(async () => {
@@ -115,8 +119,10 @@ const clearData = () => {
 
 // logout
 const logout = () => {
-  localStorage.removeItem('userlogin')
-  router.push('Login')
+  if (confirm("ban chac chan muon dang xuat?")) {
+    localStorage.removeItem('userlogin')
+    router.push('/')
+  }
 }
 
 // onMounted(async () => {
@@ -128,30 +134,50 @@ const logout = () => {
 // })
 
 </script>
+
 <template>
 
   <body>
-    <header class="py-4 bg-white border-bottom mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <h1 class="h4 mb-0">TBS</h1>
-        <router-link to="Profile" class="btn btn-info">Profile</router-link>
-        <router-link to="Index" class="btn btn-primary">Home</router-link>
-        <router-link to="/" class="btn btn-danger" @click="logout()">Logout</router-link>
-        <!-- <button class="btn btn-info" @click="goBack()">Admin</button> -->
-      </div>
-    </header>
+    <!-- <div class="container py-2"> -->
+    <div class="container py-4 border-bottom mb-5">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <div class="d-flex">
+              <li class="nav-item">
+                <RouterLink to="profile" class="nav-link active" aria-current="page">Profile</RouterLink>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
+              </li>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
     <main class="container pb-5">
       <div class="row g-4">
         <!-- Products list -->
         <section class="col-lg-8">
           <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <span class="fw-semibold">Products</span>
-              <router-link to="Category" class="btn btn-dark">Create category</router-link>
-              <form action="">
-                <input type="text" style="padding: 5px; border-radius: 5px; outline: none;" placeholder="Search...">
-                <button style="padding: 5px; border-radius: 5px;" class="custom-file-label">Search</button>
-              </form>
+            <div class="card-header justify-content-between align-items-center">
+              <nav class="navbar bg-body-tertiary">
+                <div class="container-fluid">
+                  <span class="navbar-brand">Product</span>
+                  <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+                </div>
+              </nav>
             </div>
             <div class="card-body p-0">
               <div class="table-responsive">
@@ -247,7 +273,7 @@ const logout = () => {
   </body>
 </template>
 
-<style>
+<style scoped>
 body {
   background-color: #f8f9fa;
 }
@@ -262,5 +288,11 @@ body {
 .sticky-col {
   position: sticky;
   top: 1rem;
+}
+
+div nav li {
+  list-style: none;
+  margin-left: 15px;
+  font-size: 1.2rem;
 }
 </style>

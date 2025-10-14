@@ -60,9 +60,13 @@ const login = () => {
 form {
     width: 500px;
     margin: 0 auto;
-    border: 2px solid blue;
+    box-shadow: 0px 0px 4px black;
     padding: 20px;
     margin-top: 50px;
+}
+
+h1{
+    font-size: 1.7rem;
 }
 
 form input {
