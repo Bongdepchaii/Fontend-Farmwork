@@ -1,4 +1,41 @@
 {
+  "User": [
+    {
+      "id": 1,
+      "name": "Bui Trong Thanh",
+      "email": "abc@gmail.com",
+      "location": "Dak lak",
+      "username": "abc",
+      "password": "123",
+      "sex": "Nam",
+      "img": "",
+      "createtime": "14/06/2005",
+      "role": "user"
+    },
+    {
+      "id": 2,
+      "name": "Huyen Nhu",
+      "email": "acb@gmail.com",
+      "location": "Dak lak",
+      "username": "admin",
+      "password": "123",
+      "sex": "Nam",
+      "img": "news, tutorial",
+      "createtime": "14/06/2005",
+      "role": "admin"
+    },
+    {
+      "id": 570313,
+      "name": "thanh bui",
+      "birthday": "2005-12-05",
+      "phone": "023912123",
+      "email": "abc@gmail.com",
+      "username": "abc",
+      "password": "123",
+      "createtime": "2025-10-15T04:23:17.748Z",
+      "role": "user"
+    }
+  ],
   "posts": [
     {
       "id": "1",

@@ -57,27 +57,23 @@ onMounted(() => {
 })
 
 
-// Check admin
-const isadmin = computed (() => {
-  const userlogin = localStorage.getItem('userlogin');
-  if (!userlogin){
-    return false;
+const loggedInUser = computed(() => {
+  const userData = localStorage.getItem('userlogin');
+  if (userData) {
+    return JSON.parse(userData);
   }
-  try{
-    const user = JSON.parse(userlogin);
-    return user && user.role === 'admin';
-  } catch (error){
-    console.error("Loi userlogin tu local storage:", error);
-    return false
-  }
-})
+  return null; 
+});
 
+const isAdmin = computed(() => {
+  return loggedInUser.value && loggedInUser.value.role.toLowerCase() === 'admin';
+});
 
-// Dang xuat
 const logout = () => {
-  if(confirm("Ban co chac chan muon dang xuat khong")){
-    localStorage.removeItem('userlogin')
-    router.push('/')
+  if (confirm("Ban chac chan muon dang xuat")) {
+    localStorage.removeItem('userlogin');
+    // load lai trang
+     window.location.href = '/';
   }
 }
 </script>
@@ -89,14 +85,14 @@ img {
   object-fit: cover;
 }
 
-div nav li{
+div nav li {
   margin-left: 15px;
+  list-style: none;
 }
 </style>
 
 <template>
-  <main>
-    <!-- <div class="container py-4 border-bottom mb-5">
+  <!-- <div class="container py-4 border-bottom mb-5">
     <header style="margin-top: 30px;" class="d-flex align-items-center justify-content-between mb-3">
       <RouterLink style="text-decoration: none;" to="Index"><h1 style="color: black;" class="h3 m-0">TBS</h1></RouterLink>
       <div>
@@ -107,30 +103,46 @@ div nav li{
         <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
       </form>
     </header>
-    </div>   -->
-
+  </div>   -->  
+<main>
     <div class="container py-4 border-bottom mb-5">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <RouterLink to="Index" style="font-size: 2rem;"  class="nav-link active" aria-current="page">TBS</RouterLink>
+          <RouterLink to="Index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
+            data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <RouterLink v-if="isadmin" to="product" class="nav-link active" aria-current="page">Admin</RouterLink>
-              </li>
-              <li class="nav-item">
-                       <RouterLink  class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</RouterLink>
+              <li class="nav-item" v-if="isAdmin">
+                <RouterLink to="/product" class="nav-link">Admin</RouterLink>
               </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+
+            <form class="d-flex mx-auto" role="search" @submit.prevent="loaddata">
+              <input v-model="search" class="form-control me-2" type="search" placeholder="search..."/>
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
+
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
+              <template v-if="loggedInUser">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                    Chào, {{ loggedInUser.username }}
+                  </RouterLink>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" @click="logout()">Logout</button>
+                </li>
+              </template>
+
+              <template v-else>
+                 <li class="nav-item">
+                    <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                 </li>
+              </template>
+            </ul>
           </div>
         </div>
       </nav>
