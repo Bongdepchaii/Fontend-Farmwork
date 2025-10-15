@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
@@ -117,6 +117,18 @@ const clearData = () => {
   })
 }
 
+const loggedInUser = computed(() => {
+  const userData = localStorage.getItem('userlogin');
+  if (userData) {
+    return JSON.parse(userData);
+  }
+  return null; 
+});
+
+const isAdmin = computed(() => {
+  return loggedInUser.value && loggedInUser.value.role.toLowerCase() === 'admin';
+});
+
 // logout
 const logout = () => {
   if (confirm("ban chac chan muon dang xuat?")) {
@@ -153,7 +165,10 @@ const logout = () => {
             </ul>
             <div class="d-flex">
               <li class="nav-item">
-                <RouterLink to="profile" class="nav-link active" aria-current="page">Profile</RouterLink>
+                <RouterLink to="profile" class="nav-link" aria-current="page">Profile</RouterLink>
+              </li>
+              <li class="nav-item">
+                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}</RouterLink>
               </li>
               <li class="nav-item">
                 <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
@@ -266,7 +281,7 @@ const logout = () => {
 
     <footer class="py-4 bg-dark text-white">
       <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <span>© <span id="year">2025</span> MyShop</span>
+        <span>© <span id="year">2025</span> TBS</span>
         <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
       </div>
     </footer>
@@ -293,6 +308,6 @@ body {
 div nav li {
   list-style: none;
   margin-left: 15px;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 </style>

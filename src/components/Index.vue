@@ -108,7 +108,7 @@ div nav li {
     <div class="container py-4 border-bottom mb-5">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <RouterLink to="Index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
+          <RouterLink to="Index" style="font-size: 2rem; font-weight: bold;" class="navbar-brand">TBS</RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
@@ -129,7 +129,7 @@ div nav li {
               <template v-if="loggedInUser">
                 <li class="nav-item">
                   <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
-                    Chào, {{ loggedInUser.username }}
+                    Hi, {{ loggedInUser.username }}
                   </RouterLink>
                 </li>
                 <li class="nav-item">

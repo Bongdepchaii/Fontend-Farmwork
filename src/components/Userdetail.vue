@@ -31,42 +31,74 @@ const isAdmin = computed(() => {
 onMounted(() => {
     const userId = route.params.id;
 
-    if (!userId) {
-        router.push('/');
-        return;
+    if (userId) {
+        fetchUserData(userId);
+    } else {
+        console.error('khong tim thay userid');
+        router.push('/')
     }
-    fetchUserData(userId);
-    // const loggedInUser = JSON.parse(localStorage.getItem('userlogin'));
-    // isAdmin.value = loggedInUser && loggedInUser.role.toLowerCase() === 'admin';
 });
 
 const fetchUserData = async (userId) => {
-    try {
-        // Gọi API với URL chính xác
+    try{
         const response = await axios.get(`http://localhost:3000/User/${userId}`);
-        Object.assign(user, response.data);
-        user.password = '';
+        if(response.status === 200){
+            Object.assign(user, response.data);
+        }
     } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-        message.value = "Không thể tải được thông tin người dùng.";
+        console.error ("error", error);
+        message.value = 'error khong tai duoc thong tin nguoi dung'
     }
 };
 
+
+
+// onMounted(() => {
+//     Loaddata()
+// })
+
+// const Loaddata = async () => {
+//     if(id){
+//         const datauser = await axios.get(`http://localhost:3000/User/${id}`);
+//         if(datauser.status == 200) {
+//             Object.assign(user, datauser.data)
+//         }
+//     } else {
+//         message.value = "khong co du lieu"
+//     }
+// }
+
+// const fetchUserData = async (userId) => {
+//     try {
+//         const response = await axios.get(`http://localhost:3000/User/${userId}`);
+//         Object.assign(user, response.data);
+//         user.password = '';
+//     } catch (error) {
+//         console.error("Lỗi khi lấy thông tin người dùng:", error);
+//         message.value = "Không thể tải được thông tin người dùng.";
+//     }
+// };
+
 const updateProfile = async () => {
-    const dataToUpdate = { ...user };
-    if (!dataToUpdate.password) {
-        delete dataToUpdate.password;
-    }
+
+    // const dataToUpdate = { ...user };
+    // if (!dataToUpdate.password) {
+    //     delete dataToUpdate.password;
+    // }
 
     try {
-        const response = await axios.put(`http://localhost:3000/User/${user.id}`, dataToUpdate);
+        const response = await axios.put(`http://localhost:3000/User/${user.id}`, user);
         if (response.status === 200) {
-            message.value = 'Cập nhật thông tin thành công!';
+            message.value = 'Update thanh cong';
+            if (loggedInUser.value.username !== user.username){
+                const updateLogindata = {...loggedInUser.value, username: user.username};
+                localStorage.setItem('userlogin', JSON.stringify(updateLogindata));
+            }
             setTimeout(() => { message.value = '' }, 3000);
         }
     } catch (error) {
-        console.error("Lỗi khi cập nhật thông tin:", error);
-        message.value = "Cập nhật thất bại, vui lòng thử lại.";
+        console.error("Loi update thong tin:", error);
+        message.value = "Update error, vui long thu lai.";
     }
 };
 
@@ -98,7 +130,7 @@ const logout = () => {
                         <template v-if="loggedInUser">
                           <li class="nav-item">
                               <RouterLink class="nav-link active" :to="`/userdetail/${loggedInUser.id}`">
-                                  Chào, {{ loggedInUser.username }}
+                                  Hi, {{ loggedInUser.username }}
                               </RouterLink>
                           </li>
                           <li class="nav-item">
@@ -119,21 +151,20 @@ const logout = () => {
     <div class="container py-5" style="max-width: 800px;">
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <h2 class="card-title mb-4 text-center">Profile</h2>
+                <h2 class="card-title mb-4 text-center">PROFILE</h2>
 
                 <form @submit.prevent="updateProfile">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="inputName" class="form-label">Name</label>
-                            <input type="text" v-model="user.name" class="form-control" id="inputName" required>
+                            <input type="text" v-model="user.name" class="form-control" id="inputName" value="" required>
                         </div>
 
                         <div class="col-md-6">
                             <label for="inputUsername" class="form-label">Id user</label>
-                            <input type="text" class="form-control" id="inputUsername" value="abc" readonly
+                            <input type="text" class="form-control" id="inputUsername" :value="user.id" readonly
                                 disabled>
                         </div>
-
                         <div class="col-12">
                             <label for="inputEmail" class="form-label">Email</label>
                             <input type="email" v-model="user.email" class="form-control" id="inputEmail" required>
