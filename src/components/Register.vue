@@ -1,9 +1,15 @@
 <script setup>
 import axios from 'axios'
 import { ref, reactive } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+// import { router } from 'json-server'
 
 // Dùng ref cho message để hiển thị thông báo
 const message = ref('')
+
+// userouter
+const router = useRouter()
+const route = useRoute()
 
 // Gom tất cả dữ liệu form vào một object reactive
 const user = reactive({
@@ -128,7 +134,7 @@ const Register = async () => {
         <input class="form-control" type="text" v-model="user.username" placeholder="username">
         <input class="form-control" type="password" v-model="user.password" placeholder="password">
         <input class="form-control" type="password" v-model="user.confirm_password" placeholder="confirm pasword">
-        <router-link to="/Login">Ban co tai khoan?</router-link><br>
+        <a href="#" @click="router.back()">Ban co tai khoan?</a><br>
         <button style="margin-top: 15px;" class="btn btn-primary" type="submit">Dang ky</button><br>
         <span class="success">{{ message }}</span>
     </form>

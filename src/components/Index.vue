@@ -1,15 +1,20 @@
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue'
 import axios from 'axios'
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
-const router = useRouter()
+const store = useStore();
+const router = useRouter();
+
+// Data product
 const Product = ref([])
 const total = ref(0)
 const search = ref('')
 const page = ref(1)
-const pagesize = 12
+const pagesize = 8
 
+// count so trang
 const totalpage = computed(() => Math.ceil(total.value / pagesize))
 
 const loaddata = async () => {
@@ -40,6 +45,7 @@ const loaddata = async () => {
   }
 }
 
+// next trang
 const change_page = (newpage) => {
   if (newpage < 1) return
   if (newpage > totalpage.value) return
@@ -54,9 +60,10 @@ watch(search, () => {
 
 onMounted(() => {
   loaddata()
+  store.dispatch('fetchCart')
 })
 
-
+// User
 const loggedInUser = computed(() => {
   const userData = localStorage.getItem('userlogin');
   if (userData) {
@@ -65,17 +72,34 @@ const loggedInUser = computed(() => {
   return null;
 });
 
+// admin
 const isAdmin = computed(() => {
   return loggedInUser.value && loggedInUser.value.role.toLowerCase() === 'admin';
 });
 
+// logout
 const logout = () => {
   if (confirm("Ban chac chan muon dang xuat")) {
     localStorage.removeItem('userlogin');
     // load lai trang
     window.location.href = '/';
+    // loaddata()
   }
 }
+
+
+// add cart
+const addProductToCart = async (product) => {
+  await store.dispatch('addToCart', { product: product, quantity: 1 });
+  alert(`Da add "${product.title}" vao gio hang!`);
+};
+
+const cartItemCount = computed(() => store.getters.cartItemCount);
+
+const goToCart = () => {
+  router.push('Store')
+}
+
 </script>
 
 <style scoped>
@@ -109,31 +133,37 @@ div nav li {
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <RouterLink to="Index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
+          <div class="header-actions ms-auto me-3">
+            <button style="margin-left: 15px;" @click="goToCart" class="nav-link position-relative">
+              Cart
+              <span v-if="cartItemCount > 0"
+                class=" badge rounded-pill bg-danger">
+                {{ cartItemCount }}
+              </span>
+            </button>
+          </div>
           <button style="border: none;" class="navbar-toggler">
-                    <!-- <li class="nav-item" v-if="isAdmin">
-                        <RouterLink to="/product" class="nav-link">Admin</RouterLink>
-                    </li> -->
-                    <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
-                        <li class="nav-item" v-if="isAdmin">
-                            <RouterLink to="/product" class="nav-link">Admin</RouterLink>
-                        </li>
-                        <template v-if="loggedInUser">
-                            <li class="nav-item">
-                                <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
-                                    Hi, {{ loggedInUser.username }}
-                                </RouterLink>
-                            </li>
-                            <li class="nav-item">
-                                <button class="nav-link" @click="logout()">Logout</button>
-                            </li>
-                        </template>
-                        <template v-else>
-                            <li class="nav-item">
-                                <RouterLink to="/login" class="nav-link">Login</RouterLink>
-                            </li>
-                        </template>
-                    </ul>
-                </button>
+            <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
+              <li class="nav-item" v-if="isAdmin">
+                <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+              </li>
+              <template v-if="loggedInUser">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                    Hi, {{ loggedInUser.username }}
+                  </RouterLink>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" @click="logout()">Logout</button>
+                </li>
+              </template>
+              <template v-else>
+                <li class="nav-item">
+                  <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                </li>
+              </template>
+            </ul>
+          </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item" v-if="isAdmin">
@@ -189,14 +219,13 @@ div nav li {
               </RouterLink>
               <div class="mt-auto d-flex justify-content-between align-items-center">
                 <h6 class="card-subtitle text-danger mb-0">Price: {{ Item.price }}$</h6>
-                <button class="btn btn-primary btn-sm">Add to cart</button>
+                <button @click="addProductToCart(Item)" class="btn btn-primary btn-sm">Add to cart</button>
               </div>
             </div>
           </div>
         </div>
-
         <div v-if="Product.length === 0" class="col-12 p-3 text-center text-muted">
-          Không có sản phẩm
+          khong co san pham
         </div>
       </div>
 
@@ -215,10 +244,10 @@ div nav li {
       </nav>
     </div>
   </main>
-      <footer class="py-4 bg-dark text-white">
-      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
-        <span>© <span id="year">2025</span> TBS</span>
-        <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
-      </div>
-    </footer>
+  <footer class="py-4 bg-dark text-white">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+      <span>© <span id="year">2025</span> TBS</span>
+      <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
+    </div>
+  </footer>
 </template>
