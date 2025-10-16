@@ -11,9 +11,10 @@ const user = reactive({
     id: null,
     name: '',
     email: '',
-    username: '',
     location: '',
-    password: '',
+    sex: '',
+    age: null,
+    favorite: ''
 });
 
 const loggedInUser = computed(() => {
@@ -189,6 +190,27 @@ const logout = () => {
                         <div class="col-12">
                             <label for="inputEmail" class="form-label">Email</label>
                             <input type="email" v-model="user.email" class="form-control" id="inputEmail" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="inputAge" class="form-label">Tuổi</label>
+                            <input type="number" v-model="user.age" class="form-control" id="inputAge"
+                                placeholder="Nhập tuổi của bạn">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="inputSex" class="form-label">Giới tính</label>
+                            <select v-model="user.sex" id="inputSex" class="form-select">
+                                <option value="" disabled>Chosee...</option>
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="inputInterests" class="form-label">favorite</label>
+                            <input type="text" v-model="user.interests" class="form-control" id="inputInterests"
+                                placeholder="VD: iPhone, iPad, Macbook,...">
                         </div>
 
                         <div class="col-12">

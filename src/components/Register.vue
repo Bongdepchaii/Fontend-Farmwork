@@ -44,7 +44,7 @@ const Register = async () => {
         message.value = "password phai trung khop"
     } else {
         const new_user = {
-            id: user.id,
+            id: user.id + '',
             name: user.name,
             birthday: user.birthday,
             phone: user.phone,

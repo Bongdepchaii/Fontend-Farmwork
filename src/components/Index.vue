@@ -228,8 +228,7 @@ div nav li {
           <span class="alert alert-info">khong co san pham</span>
         </div>
       </div>
-
-      <nav aria-label="Post navigation" class="mt-4" v-if="totalpage > 1">
+      <!-- <nav aria-label="Post navigation" class="mt-4" v-if="totalpage > 1">
         <ul class="pagination justify-content-center">
           <li class="page-item" :class="{ disabled: page === 1 }">
             <button class="page-link" @click="change_page(page - 1)" :disabled="page === 1">Previous</button>
@@ -241,7 +240,7 @@ div nav li {
             <button class="page-link" @click="change_page(page + 1)" :disabled="page === totalpage">Next</button>
           </li>
         </ul>
-      </nav>
+      </nav> -->
     </div>
   </main>
   <footer style="margin-top: 50px;" class="py-4 bg-dark text-white">

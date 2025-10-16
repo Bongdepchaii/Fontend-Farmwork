@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, computed } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from 'axios';
@@ -11,8 +11,10 @@ const store = useStore();
 const id = route.params.id;
 const product = reactive({});
 
-onMounted(() => {
-    loadProductData();
+const relatedProducts = ref([]);
+
+onMounted(async () => {
+    await loadProductData();
 });
 
 const loadProductData = async () => {
@@ -20,6 +22,20 @@ const loadProductData = async () => {
         const response = await axios.get(`http://localhost:3000/products/${id}`);
         if (response.status == 200) {
             Object.assign(product, response.data);
+            await loadRelatedProducts(product.category, product.id);
+        }
+    }
+};
+
+const loadRelatedProducts = async (category, currentProductId) => {
+    if (category) {
+        try {
+            const response = await axios.get(`http://localhost:3000/products?category=${category}&id_ne=${currentProductId}&_limit=4`);
+            if (response.status === 200) {
+                relatedProducts.value = response.data;
+            }
+        } catch (error) {
+            console.error("Error khong tai duoc san pham lien quan:", error);
         }
     }
 };
@@ -63,7 +79,25 @@ const handleAddToCart = (item) => {
                 </div>
             </div>
         </div>
+        <div v-if="relatedProducts.length > 0" class="related-products mt-5">
+            <h2 class="mb-4">Prouduct lien quan</h2>
+            <div class="row">
+                <div v-for="related in relatedProducts" :key="related.id" class="col-md-3">
+                    <div class="card h-100 shadow-sm">
+                        <img :src="related.image" class="card-img-top related-product-image" :alt="related.title">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ related.title }}</h5>
+                            <p class="card-text fw-bold text-danger mt-auto">${{ related.price }}</p>
+                            <RouterLink :to="`/product-detail/${related.id}`" class="btn btn-sm btn-outline-primary stretched-link" @click.prevent="router.push(`/productdetail/${related.id}`).then(() => location.reload())">
+                                Xem chi tiết
+                            </RouterLink>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </template>
 
 <style scoped>
@@ -109,5 +143,11 @@ const handleAddToCart = (item) => {
 .product-actions {
     padding-top: 1.5rem;
     border-top: 1px solid #eee;
+}
+
+.related-product-image {
+    height: 200px;
+    object-fit: contain;
+    padding: 1rem;
 }
 </style>

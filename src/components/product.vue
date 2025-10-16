@@ -176,7 +176,7 @@ const reset = () => {
         <div class="container-fluid">
           <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
                         <li class="nav-item">
-                <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">Quan ly user</RouterLink>
+                <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">Custom USER</RouterLink>
               </li>
           <button style="border: none;" class="navbar-toggler">
             <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
