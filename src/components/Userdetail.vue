@@ -40,13 +40,13 @@ onMounted(() => {
 });
 
 const fetchUserData = async (userId) => {
-    try{
+    try {
         const response = await axios.get(`http://localhost:3000/User/${userId}`);
-        if(response.status === 200){
+        if (response.status === 200) {
             Object.assign(user, response.data);
         }
     } catch (error) {
-        console.error ("error", error);
+        console.error("error", error);
         message.value = 'error khong tai duoc thong tin nguoi dung'
     }
 };
@@ -90,8 +90,8 @@ const updateProfile = async () => {
         const response = await axios.put(`http://localhost:3000/User/${user.id}`, user);
         if (response.status === 200) {
             message.value = 'Update thanh cong';
-            if (loggedInUser.value.username !== user.username){
-                const updateLogindata = {...loggedInUser.value, username: user.username};
+            if (loggedInUser.value.username !== user.username) {
+                const updateLogindata = { ...loggedInUser.value, username: user.username };
                 localStorage.setItem('userlogin', JSON.stringify(updateLogindata));
             }
             setTimeout(() => { message.value = '' }, 3000);
@@ -111,13 +111,34 @@ const logout = () => {
 </script>
 
 <template>
-       <div class="container py-4 border-bottom mb-5">
+    <div class="container py-4 border-bottom mb-5">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
                 <RouterLink to="/index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent">
-                    <span class="navbar-toggler-icon"></span>
+                <button style="border: none;" class="navbar-toggler">
+                    <!-- <li class="nav-item" v-if="isAdmin">
+                        <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+                    </li> -->
+                    <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
+                        <li class="nav-item" v-if="isAdmin">
+                            <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+                        </li>
+                        <template v-if="loggedInUser">
+                            <li class="nav-item">
+                                <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                                    Hi, {{ loggedInUser.username }}
+                                </RouterLink>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" @click="logout()">Logout</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="nav-item">
+                                <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                            </li>
+                        </template>
+                    </ul>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -125,17 +146,16 @@ const logout = () => {
                             <RouterLink to="/product" class="nav-link">Admin</RouterLink>
                         </li>
                     </ul>
-
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
                         <template v-if="loggedInUser">
-                          <li class="nav-item">
-                              <RouterLink class="nav-link active" :to="`/userdetail/${loggedInUser.id}`">
-                                  Hi, {{ loggedInUser.username }}
-                              </RouterLink>
-                          </li>
-                          <li class="nav-item">
-                            <button class="nav-link" @click="logout()">logout</button>
-                          </li>
+                            <li class="nav-item">
+                                <RouterLink class="nav-link active" :to="`/userdetail/${loggedInUser.id}`">
+                                    Hi, {{ loggedInUser.username }}
+                                </RouterLink>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" @click="logout()">logout</button>
+                            </li>
                         </template>
                         <template v-else>
                             <li class="nav-item">
@@ -157,7 +177,8 @@ const logout = () => {
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="inputName" class="form-label">Name</label>
-                            <input type="text" v-model="user.name" class="form-control" id="inputName" value="" required>
+                            <input type="text" v-model="user.name" class="form-control" id="inputName" value=""
+                                required>
                         </div>
 
                         <div class="col-md-6">
@@ -189,6 +210,7 @@ const logout = () => {
 
 <style scoped>
 div nav li {
+    margin-left: 15px;
     list-style: none;
 }
 

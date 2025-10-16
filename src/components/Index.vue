@@ -62,7 +62,7 @@ const loggedInUser = computed(() => {
   if (userData) {
     return JSON.parse(userData);
   }
-  return null; 
+  return null;
 });
 
 const isAdmin = computed(() => {
@@ -73,7 +73,7 @@ const logout = () => {
   if (confirm("Ban chac chan muon dang xuat")) {
     localStorage.removeItem('userlogin');
     // load lai trang
-     window.location.href = '/';
+    window.location.href = '/';
   }
 }
 </script>
@@ -103,16 +103,37 @@ div nav li {
         <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
       </form>
     </header>
-  </div>   -->  
-<main>
+  </div>   -->
+  <main>
     <div class="container py-4 border-bottom mb-5">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <RouterLink to="Index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent">
-            <span class="navbar-toggler-icon"></span>
-          </button>
+          <button style="border: none;" class="navbar-toggler">
+                    <!-- <li class="nav-item" v-if="isAdmin">
+                        <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+                    </li> -->
+                    <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
+                        <li class="nav-item" v-if="isAdmin">
+                            <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+                        </li>
+                        <template v-if="loggedInUser">
+                            <li class="nav-item">
+                                <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                                    Hi, {{ loggedInUser.username }}
+                                </RouterLink>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" @click="logout()">Logout</button>
+                            </li>
+                        </template>
+                        <template v-else>
+                            <li class="nav-item">
+                                <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                            </li>
+                        </template>
+                    </ul>
+                </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item" v-if="isAdmin">
@@ -121,7 +142,7 @@ div nav li {
             </ul>
 
             <form class="d-flex mx-auto" role="search" @submit.prevent="loaddata">
-              <input v-model="search" class="form-control me-2" type="search" placeholder="search..."/>
+              <input v-model="search" class="form-control me-2" type="search" placeholder="search..." />
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
 
@@ -138,9 +159,9 @@ div nav li {
               </template>
 
               <template v-else>
-                 <li class="nav-item">
-                    <RouterLink to="/login" class="nav-link">Login</RouterLink>
-                 </li>
+                <li class="nav-item">
+                  <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                </li>
               </template>
             </ul>
           </div>
@@ -194,4 +215,10 @@ div nav li {
       </nav>
     </div>
   </main>
+      <footer class="py-4 bg-dark text-white">
+      <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
+        <span>© <span id="year">2025</span> TBS</span>
+        <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
+      </div>
+    </footer>
 </template>

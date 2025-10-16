@@ -171,10 +171,30 @@ const Loadulieucategory = async () => {
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+          <button style="border: none;" class="navbar-toggler">
+            <!-- <li class="nav-item" v-if="isAdmin">
+                        <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+                    </li> -->
+            <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
+              <li class="nav-item" v-if="isAdmin">
+                <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+              </li>
+              <template v-if="loggedInUser">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                    Hi, {{ loggedInUser.username }}
+                  </RouterLink>
+                </li>
+                <li class="nav-item">
+                  <button class="nav-link" @click="logout()">Logout</button>
+                </li>
+              </template>
+              <template v-else>
+                <li class="nav-item">
+                  <RouterLink to="/login" class="nav-link">Login</RouterLink>
+                </li>
+              </template>
+            </ul>
           </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
