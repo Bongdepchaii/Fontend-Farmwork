@@ -16,14 +16,13 @@ onMounted(async () => {
 // Xoa du lieu
 const deleteCategory = async (id) => {
   //b1 
-  const isConfirm = confirm(`bạn có muốn xoá id ${id} này không ?`)
+  const isConfirm = confirm(`Are u sure delete id: ${id} here?`)
   if (isConfirm) {
     //b2:
     const response = await axios.delete(`http://localhost:3000/category/${id}`);
     if (response.status == 200) {
       Loadulieu()
-      // Thong bao du lieu xoa bang code alert
-      alert('Đã xoá')
+      alert('Delete successfly')
     }
   }
 }
@@ -86,6 +85,9 @@ const clearData = () => {
   })
 }
 
+const reset = () => {
+  window.location.href = 'Category';
+}
 
 // onMounted(async () => {
 //   console.log(`the component is now mounted.`)
@@ -205,7 +207,7 @@ const logout = () => {
 
                 <div class="d-flex gap-2">
                   <button type="submit" class="btn btn-primary">Save</button>
-                  <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                  <a @click="reset()" class="btn btn-outline-secondary">Reset</a>
                 </div>
 
                 <!-- Optional hidden id field if your backend needs it -->

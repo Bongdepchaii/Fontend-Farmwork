@@ -1,18 +1,6 @@
 {
   "User": [
     {
-      "id": "1",
-      "name": "Bui Trong Thanh",
-      "email": "abc@gmail.com",
-      "location": "Dak lak",
-      "username": "abc",
-      "password": "123",
-      "sex": "Nam",
-      "img": "",
-      "createtime": "14/06/2005",
-      "role": "user"
-    },
-    {
       "id": "2",
       "name": "Admin",
       "email": "admin@gmail.com",
@@ -34,7 +22,7 @@
       "birthday": "2005-12-05",
       "phone": "023912123",
       "createtime": "2025-10-15T04:23:17.748Z",
-      "role": "user"
+      "role": "admin"
     }
   ],
   "posts": [
@@ -100,10 +88,6 @@
     {
       "id": "e80c",
       "name": "Nokia"
-    },
-    {
-      "id": "0552",
-      "name": "Lenovo"
     }
   ],
   "products": [

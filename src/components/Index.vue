@@ -225,7 +225,7 @@ div nav li {
           </div>
         </div>
         <div v-if="Product.length === 0" class="col-12 p-3 text-center text-muted">
-          khong co san pham
+          <span class="alert alert-info">khong co san pham</span>
         </div>
       </div>
 
