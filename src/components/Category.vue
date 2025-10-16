@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, computed } from 'vue'
 import axios from 'axios'
 
 const i = 1
@@ -95,28 +95,76 @@ const clearData = () => {
 //   }
 // })
 
+const loggedInUser = computed(() => {
+  const userData = localStorage.getItem('userlogin');
+  if (userData) {
+    return JSON.parse(userData);
+  }
+  return null; 
+});
+
+const isAdmin = computed(() => {
+  return loggedInUser.value && loggedInUser.value.role.toLowerCase() === 'admin';
+});
+
+// logout
+const logout = () => {
+  if (confirm("ban chac chan muon dang xuat?")) {
+    localStorage.removeItem('userlogin')
+    router.push('/')
+  }
+}
+
 </script>
 <template>
 
   <body>
-    <header class="py-4 bg-white border-bottom mb-4">
-      <div class="container d-flex align-items-center justify-content-between">
-        <h1 class="h4 mb-0">TBS</h1>
-        <router-link to="Product" class="btn btn-info">Back</router-link>
-        <!-- <button class="btn btn-info" @click="goBack()">Admin</button> -->
-      </div>
-    </header>
+   <div class="container py-4 border-bottom mb-5">
+      <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <div class="d-flex">
+              <li class="nav-item">
+                <RouterLink to="profile" class="nav-link" aria-current="page">Profile</RouterLink>
+              </li>
+              <li class="nav-item">
+                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}</RouterLink>
+              </li>
+              <li class="nav-item">
+                <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
+              </li>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </div>
     <main class="container pb-5">
       <div class="row g-4">
+         <div class="col-md-2">
+          <RouterLink style="margin-bottom: 15px;" class="nav-link" to="Category">Add new Category</RouterLink>
+          <RouterLink class="nav-link" to="Product">Add new Product</RouterLink>
+        </div>
         <!-- Products list -->
-        <section class="col-lg-8">
+        <section class="col-lg-7">
           <div class="card shadow-sm">
-            <div class="card-header d-flex justify-content-between align-items-center">
-              <span class="fw-semibold">Category</span>
-              <form action="">
-                <input type="text" style="padding: 5px; border-radius: 5px; outline: none;" placeholder="Search...">
-                <button style="padding: 5px; border-radius: 5px;" class="custom-file-label">Search</button>
-              </form>
+            <div class="card-header justify-content-between align-items-center">
+              <nav class="navbar bg-body-tertiary">
+                <div class="container-fluid">
+                  <span class="navbar-brand">Category</span>
+                  <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                  </form>
+                </div>
+              </nav>
             </div>
             <div class="card-body p-0">
               <div class="table-responsive">
@@ -133,7 +181,7 @@ const clearData = () => {
                       <td><strong>{{ i++ }}</strong></td>
                       <td><span>{{ item.name }}</span></td>
                       <td class="text-end">
-                        <button @click="editCategory(item)" class="btn btn-sm btn-outline-primary">Edit</button>
+                        <button @click="editCategory(item)" style="margin-right: 4px;" class="btn btn-sm btn-outline-primary">Edit</button>
                         <button @click="deleteCategory(item.id)" class="btn btn-sm btn-danger">Delete</button>
                       </td>
                     </tr>
@@ -143,9 +191,8 @@ const clearData = () => {
             </div>
           </div>
         </section>
-
         <!-- Edit form -->
-        <aside class="col-lg-4">
+        <aside class="col-lg-3">
           <div class="card shadow-sm sticky-col" id="editForm">
             <div class="card-header">Edit Category</div>
             <div class="card-body">
@@ -169,7 +216,7 @@ const clearData = () => {
         </aside>
       </div>
     </main>
-<!-- 
+    <!-- 
     <footer class="py-4 bg-dark text-white">
       <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
         <span>© <span id="year">2025</span> TBS</span>
@@ -194,5 +241,15 @@ body {
 .sticky-col {
   position: sticky;
   top: 1rem;
+}
+
+div nav li {
+  list-style: none;
+  margin-left: 15px;
+  font-size: 1rem;
+}
+
+tr td{
+  padding: 12px;
 }
 </style>

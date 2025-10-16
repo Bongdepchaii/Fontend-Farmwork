@@ -3,7 +3,6 @@ import { ref, onMounted, reactive, computed } from 'vue'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
-
 const router = useRouter()
 const edit = ref(false)
 const products = ref([])
@@ -19,6 +18,12 @@ const product = reactive({
 onMounted(async () => {
   Loadulieu()
 })
+
+// load du lieu category
+onMounted(async () => {
+  Loadulieucategory()
+})
+
 // Xoa du lieu
 const deleteProduct = async (id) => {
   //b1 
@@ -29,7 +34,7 @@ const deleteProduct = async (id) => {
     if (response.status == 200) {
       Loadulieu()
       // Thong bao du lieu xoa bang code alert
-      alert('Đã xoá')
+      alert('Delete success')
     }
   }
 }
@@ -122,7 +127,7 @@ const loggedInUser = computed(() => {
   if (userData) {
     return JSON.parse(userData);
   }
-  return null; 
+  return null;
 });
 
 const isAdmin = computed(() => {
@@ -144,6 +149,17 @@ const logout = () => {
 //     products.value = response.data
 //   }
 // })
+
+// Catrgory
+const categorys = ref([])
+
+// load data category
+const Loadulieucategory = async () => {
+  const response = await axios.get('http://localhost:3000/category');
+  if (response.status == 200) {
+    categorys.value = response.data
+  }
+}
 
 </script>
 
@@ -168,7 +184,8 @@ const logout = () => {
                 <RouterLink to="profile" class="nav-link" aria-current="page">Profile</RouterLink>
               </li>
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}</RouterLink>
+                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}
+                </RouterLink>
               </li>
               <li class="nav-item">
                 <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
@@ -180,8 +197,12 @@ const logout = () => {
     </div>
     <main class="container pb-5">
       <div class="row g-4">
+        <div class="col-md-2">
+          <RouterLink style="margin-bottom: 15px;" class="nav-link" to="Category">Add new Category</RouterLink>
+          <RouterLink class="nav-link" to="Product">Add new Product</RouterLink>
+        </div>
         <!-- Products list -->
-        <section class="col-lg-8">
+        <section class="col-lg-7">
           <div class="card shadow-sm">
             <div class="card-header justify-content-between align-items-center">
               <nav class="navbar bg-body-tertiary">
@@ -226,9 +247,9 @@ const logout = () => {
         </section>
 
         <!-- Edit form -->
-        <aside class="col-lg-4">
+        <aside class="col-lg-3">
           <div class="card shadow-sm sticky-col" id="editForm">
-            <div class="card-header">Edit Product</div>
+            <div class="card-header">Add & Edit Product</div>
             <div class="card-body">
               <form @submit="handleSubmit" class="form">
                 <div class="mb-3">
@@ -245,10 +266,7 @@ const logout = () => {
                   <label for="pCategory" class="form-label">Category</label>
                   <select v-model="product.category" id="pCategory" class="form-select" name="category" required>
                     <option value="" selected>Choose...</option>
-                    <option>Electronics</option>
-                    <option>Home</option>
-                    <option>Fashion</option>
-                    <option>Sports</option>
+                    <option v-for="item in categorys" :key="item.id">{{ item.name }}</option>
                   </select>
                 </div>
                 <div class="mb-3">
@@ -267,7 +285,7 @@ const logout = () => {
 
                 <div class="d-flex gap-2">
                   <button type="submit" class="btn btn-primary">Save</button>
-                  <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                  <button type="reset" class="btn btn-outline-secondary">Reset</button><br>
                 </div>
 
                 <!-- Optional hidden id field if your backend needs it -->

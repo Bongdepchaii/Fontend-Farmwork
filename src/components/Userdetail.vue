@@ -192,9 +192,9 @@ div nav li {
     list-style: none;
 }
 
-.navbar-brand {
+/* .navbar-brand {
     font-weight: bold;
-}
+} */
 
 .btn-outline-danger {
     margin-left: 15px;

@@ -8,7 +8,7 @@ const Product = ref([])
 const total = ref(0)
 const search = ref('')
 const page = ref(1)
-const pagesize = 10
+const pagesize = 12
 
 const totalpage = computed(() => Math.ceil(total.value / pagesize))
 
@@ -108,7 +108,7 @@ div nav li {
     <div class="container py-4 border-bottom mb-5">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <RouterLink to="Index" style="font-size: 2rem; font-weight: bold;" class="navbar-brand">TBS</RouterLink>
+          <RouterLink to="Index" style="font-size: 2rem;" class="navbar-brand">TBS</RouterLink>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent">
             <span class="navbar-toggler-icon"></span>
