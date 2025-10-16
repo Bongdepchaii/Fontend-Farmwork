@@ -12,7 +12,7 @@ const Product = ref([])
 const total = ref(0)
 const search = ref('')
 const page = ref(1)
-const pagesize = 8
+const pagesize = 12
 
 // count so trang
 const totalpage = computed(() => Math.ceil(total.value / pagesize))
@@ -244,7 +244,7 @@ div nav li {
       </nav>
     </div>
   </main>
-  <footer class="py-4 bg-dark text-white">
+  <footer style="margin-top: 50px;" class="py-4 bg-dark text-white">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
       <span>© <span id="year">2025</span> TBS</span>
       <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->

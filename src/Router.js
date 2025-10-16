@@ -10,6 +10,7 @@ import Index from './components/Index.vue'
 import Category from './components/Category.vue'
 import Userdetail from './components/Userdetail.vue'
 import Store from './components/Cart.vue'
+import User from './components/User.vue'
 
 const routes = [
     { path: '/', name: 'Home', component: Index, meta: { isAuth: false } },
@@ -22,6 +23,7 @@ const routes = [
     { path: '/index', name: 'Index', component: Index, meta: { isAuth: false } },
     { path: '/userdetail/:id', name: 'Userdetail', component: Userdetail, meta: { isAuth: false } },
     { path: '/store', name: 'Store', component: Store, meta: { isAuth: false } },
+    { path: '/user', name: 'User', component: User, meta: { isAuth: false } },
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
