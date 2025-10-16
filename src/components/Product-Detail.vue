@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, onMounted, ref } from 'vue';
+import { reactive, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import axios from 'axios';
@@ -8,18 +8,12 @@ const route = useRoute();
 const router = useRouter();
 const store = useStore();
 
-const id = route.params.id;
 const product = reactive({});
+const productCategory = ref([]);
 
-const relatedProducts = ref([]);
-
-onMounted(async () => {
-    await loadProductData();
-});
-
-const loadProductData = async () => {
-    if (id) {
-        const response = await axios.get(`http://localhost:3000/products/${id}`);
+const loadProductData = async (productId) => {
+    if (productId) {
+        const response = await axios.get(`http://localhost:3000/products/${productId}`);
         if (response.status == 200) {
             Object.assign(product, response.data);
             await loadRelatedProducts(product.category, product.id);
@@ -27,12 +21,23 @@ const loadProductData = async () => {
     }
 };
 
+onMounted(async () => {
+    await loadProductData(route.params.id);
+});
+
+watch(() => route.params.id, async (idnew) => {
+    if (idnew) {
+        await loadProductData(idnew);
+        window.scrollTo(0, 0);
+    }
+});
+
 const loadRelatedProducts = async (category, currentProductId) => {
     if (category) {
         try {
             const response = await axios.get(`http://localhost:3000/products?category=${category}&id_ne=${currentProductId}&_limit=4`);
             if (response.status === 200) {
-                relatedProducts.value = response.data;
+                productCategory.value = response.data;
             }
         } catch (error) {
             console.error("Error khong tai duoc san pham lien quan:", error);
@@ -48,6 +53,7 @@ const handleAddToCart = (item) => {
     store.dispatch('addToCart', { product: item, quantity: 1 });
     alert(`Đã thêm "${item.title}" vào giỏ hàng!`);
 };
+
 </script>
 
 <template>
@@ -61,10 +67,11 @@ const handleAddToCart = (item) => {
 
                     <div class="col-md-6 d-flex flex-column">
                         <div class="product-info">
-                            <span class="badge bg-secondary mb-2 product-category">Danh muc {{ product.category }}</span>
+                            <span class="badge bg-secondary mb-2 product-category">Danh muc {{ product.category
+                            }}</span>
                             <h1 class="product-title">{{ product.title }}</h1>
                             <p class="product-price">Gia: ${{ product.price }}</p>
-                            <p class="product-description">Mota:{{ product.description }}</p>
+                            <p class="product-description">Mota: {{ product.description }}</p>
                         </div>
                         <div class="product-actions mt-auto">
                             <button @click="goBack()" class="btn btn-outline-secondary">
@@ -79,17 +86,20 @@ const handleAddToCart = (item) => {
                 </div>
             </div>
         </div>
-        <div v-if="relatedProducts.length > 0" class="related-products mt-5">
+        <div v-if="productCategory.length > 0" class="related-products mt-5">
             <h2 class="mb-4">Prouduct lien quan</h2>
             <div class="row">
-                <div v-for="related in relatedProducts" :key="related.id" class="col-md-3">
+                <div v-for="related in productCategory" :key="related.id" class="col-md-3">
                     <div class="card h-100 shadow-sm">
                         <img :src="related.image" class="card-img-top related-product-image" :alt="related.title">
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ related.title }}</h5>
-                            <p class="card-text fw-bold text-danger mt-auto">${{ related.price }}</p>
-                            <RouterLink :to="`/product-detail/${related.id}`" class="btn btn-sm btn-outline-primary stretched-link" @click.prevent="router.push(`/productdetail/${related.id}`).then(() => location.reload())">
-                                Xem chi tiết
+                            <p class="card-text fw-bold text-danger mt-auto">Price: ${{ related.price }}</p>
+                            <p class="card-text text-success mt-auto">Mo ta: {{ related.description }}</p>
+
+                            <RouterLink :to="`/product-detail/${related.id}`"
+                                class="btn btn-sm btn-outline-primary stretched-link">
+                                check
                             </RouterLink>
                         </div>
                     </div>
