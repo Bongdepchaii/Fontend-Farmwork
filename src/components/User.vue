@@ -18,10 +18,13 @@ onMounted(async () => {
   await Loadulieu()
 })
 
-const clearData = () => {
-  Object.assign(user, {
-    role: '',
-  })
+// load du lieu
+const Loadulieu = async () => {
+  console.log(`the component is now mounted.`)
+  const response = await axios.get('http://localhost:3000/User');
+  if (response.status == 200) {
+    users.value = response.data
+  }
 }
 
 // Xoa du lieu
@@ -68,14 +71,7 @@ const submit = async () => {
   }
 };
 
-// load du lieu
-const Loadulieu = async () => {
-  console.log(`the component is now mounted.`)
-  const response = await axios.get('http://localhost:3000/User');
-  if (response.status == 200) {
-    users.value = response.data
-  }
-}
+
 
 const loggedInUser = computed(() => {
   const userData = localStorage.getItem('userlogin');
@@ -110,9 +106,12 @@ const reset = () => {
         <li class="nav-item" v-if="isAdmin">
           <RouterLink style="margin-left: 15px;" to="/product" class="nav-link">Admin</RouterLink>
         </li>
+        <li class="nav-item">
+          <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History
+          </RouterLink>
+        </li>
         <button style="border: none;" class="navbar-toggler">
           <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
-
             <li class="nav-item" v-if="isAdmin">
               <RouterLink to="/product" class="nav-link">Admin</RouterLink>
             </li>
@@ -150,6 +149,8 @@ const reset = () => {
     </nav>
   </div>
   <div class="container py-5" style="margin-top: 15px;">
+          <h1 style="font-family: 'Times New Roman', Times, serif;">USER</h1>
+            <br>
     <div class="row">
       <div style="box-shadow: 0px 0px 3px black;" class="col-md-8">
         <table class="table table-sm">
@@ -179,35 +180,35 @@ const reset = () => {
         </table>
       </div>
       <div class="col-md-4">
-  <div class="card shadow-sm sticky-col" id="editForm">
-    <div class="card-header">Edit User</div>
-    <div class="card-body">
-      <form @submit.prevent="submit" class="form">
-        <fieldset :disabled="!edit">
-          <div class="mb-3">
-            <label for="userId" class="form-label">User ID (Editing)</label>
-            <input type="text" v-model="user.id" id="userId" class="form-control" readonly>
-          </div>
+        <div class="card shadow-sm sticky-col" id="editForm">
+          <div class="card-header">Edit User</div>
+          <div class="card-body">
+            <form @submit.prevent="submit" class="form">
+              <fieldset :disabled="!edit">
+                <div class="mb-3">
+                  <label for="userId" class="form-label">User ID (Editing)</label>
+                  <input type="text" v-model="user.id" id="userId" class="form-control" readonly>
+                </div>
 
-          <div class="mb-3">
-            <label for="pCategory" class="form-label">Edit Role</label>
-            <select v-model="user.role" id="pCategory" class="form-select" name="category">
-              <option value="" disabled>Choose...</option>
-              <option v-for="roleValue in roles" :key="roleValue" :value="roleValue">
-                {{ roleValue }}
-              </option>
-            </select>
-          </div>
+                <div class="mb-3">
+                  <label for="pCategory" class="form-label">Edit Role</label>
+                  <select v-model="user.role" id="pCategory" class="form-select" name="category">
+                    <option value="" disabled>Choose...</option>
+                    <option v-for="roleValue in roles" :key="roleValue" :value="roleValue">
+                      {{ roleValue }}
+                    </option>
+                  </select>
+                </div>
 
-          <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Save Changes</button>
-            <button type="button" @click="reset()" class="btn btn-outline-secondary">Reset</button>
+                <div class="d-flex gap-2">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  <button type="button" @click="reset()" class="btn btn-outline-secondary">Reset</button>
+                </div>
+              </fieldset>
+            </form>
           </div>
-        </fieldset>
-      </form>
-    </div>
-  </div>
-</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>

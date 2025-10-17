@@ -49,10 +49,16 @@ const goBack = () => {
     router.back();
 };
 
-const handleAddToCart = (item) => {
-    store.dispatch('addToCart', { product: item, quantity: 1 });
-    alert(`Add product id: "${item.title}" to cart!`);
-    router.push('cart')
+const addProductToCart = async (product) => {
+  if (!localStorage.getItem('userlogin')) {
+    if (confirm('Ban chua dang nhap hay dang nhap!')){
+      router.push('/login')
+    }
+  } else {
+    await store.dispatch('addToCart', { product: product, quantity: 1 });
+    alert(`Da add "${product.title}" vao gio hang!`);
+    router.push('/Store')
+  }
 };
 
 </script>
@@ -78,7 +84,7 @@ const handleAddToCart = (item) => {
                             <button @click="goBack()" class="btn btn-outline-secondary">
                                 Back
                             </button>
-                            <button style="margin-left: 15px;" @click="handleAddToCart(product)"
+                            <button style="margin-left: 15px;" @click="addProductToCart(product)"
                                 class="btn btn-success">
                                 Add to cart
                             </button>

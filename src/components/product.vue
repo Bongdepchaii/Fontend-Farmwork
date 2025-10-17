@@ -27,7 +27,7 @@ onMounted(async () => {
 // Xoa du lieu
 const deleteProduct = async (id) => {
   //b1 
-  const isConfirm = confirm(`bạn có muốn xoá id ${id} này không ?`)
+  const isConfirm = confirm(`Ban chac chan muon xoa id: ${id} nay?`)
   if (isConfirm) {
     //b2:
     const response = await axios.delete(`http://localhost:3000/products/${id}`);
@@ -65,7 +65,7 @@ const handleFileUpload = (event) => {
   if (file) {
     const reader = new FileReader()
     reader.onload = (e) => {
-      product.image = e.target.result 
+      product.image = e.target.result
     }
     reader.readAsDataURL(file)
   }
@@ -99,6 +99,7 @@ const handleSubmit = async () => {
       // creator: 'admin',
       // tags: 'news'
     }
+
     // Day du lieu vo db.json products
     const response = await axios.post('http://localhost:3000/products', payload);
     console.log(response);
@@ -175,12 +176,15 @@ const reset = () => {
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
           <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
-                        <li class="nav-item">
-                <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">Custom USER</RouterLink>
-              </li>
+          <li class="nav-item">
+            <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">User</RouterLink>
+          </li>
+          <li class="nav-item">
+            <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History</RouterLink>
+          </li>
           <button style="border: none;" class="navbar-toggler">
             <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
-              
+
               <li class="nav-item" v-if="isAdmin">
                 <RouterLink to="/product" class="nav-link">Admin</RouterLink>
               </li>
@@ -206,7 +210,8 @@ const reset = () => {
             </ul>
             <div class="d-flex">
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}</RouterLink>
+                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}
+                </RouterLink>
               </li>
               <li class="nav-item">
                 <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>

@@ -90,8 +90,14 @@ const logout = () => {
 
 // add cart
 const addProductToCart = async (product) => {
-  await store.dispatch('addToCart', { product: product, quantity: 1 });
-  alert(`Da add "${product.title}" vao gio hang!`);
+  if (!localStorage.getItem('userlogin')) {
+    if (confirm('Ban chua dang nhap hay dang nhap!')){
+      router.push('/login')
+    }
+  } else {
+    await store.dispatch('addToCart', { product: product, quantity: 1 });
+    alert(`Da add "${product.title}" vao gio hang!`);
+  }
 };
 
 const cartItemCount = computed(() => store.getters.cartItemCount);
@@ -136,8 +142,7 @@ div nav li {
           <div class="header-actions ms-auto me-3">
             <button style="margin-left: 15px;" @click="goToCart" class="nav-link position-relative">
               Cart
-              <span v-if="cartItemCount > 0"
-                class=" badge rounded-pill bg-danger">
+              <span v-if="cartItemCount > 0" class=" badge rounded-pill bg-danger">
                 {{ cartItemCount }}
               </span>
             </button>

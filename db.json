@@ -22,7 +22,7 @@
       "birthday": "2005-12-05",
       "phone": "023912123",
       "createtime": "2025-10-15T04:23:17.748Z",
-      "role": "admin"
+      "role": "user"
     },
     {
       "id": "993982",
@@ -264,8 +264,86 @@
       ],
       "total": 4019.9300000000003,
       "created_at": 1760456310773,
-      "status": "pending",
+      "status": "shipping",
       "user_id": "d6d9"
+    },
+    {
+      "id": "bb3a",
+      "name": "abc",
+      "sdt": "2131231",
+      "address": "bmt city ",
+      "email": "abc@gmail.com",
+      "pay_type": "cod",
+      "items": [
+        {
+          "id": "6",
+          "name": "iPad mini 6",
+          "price": 32.99,
+          "quantity": 1
+        },
+        {
+          "id": "4",
+          "name": "iphone 8 plus",
+          "price": 39.99,
+          "quantity": 1
+        }
+      ],
+      "total": 72.98,
+      "created_at": "2025-10-17T08:43:02.662Z",
+      "status": "shipping",
+      "user_id": null
+    },
+    {
+      "id": "721a",
+      "name": "Nguyen van a",
+      "sdt": "2412414214",
+      "address": "Buon Ma Thuat city",
+      "email": "nguyenvana@gmail.com",
+      "pay_type": "cod",
+      "items": [
+        {
+          "id": "6",
+          "name": "iPad mini 6",
+          "price": 32.99,
+          "quantity": 1
+        },
+        {
+          "id": "4",
+          "name": "iphone 8 plus",
+          "price": 39.99,
+          "quantity": 1
+        }
+      ],
+      "total": 72.98,
+      "created_at": "2025-10-17T09:28:40.916Z",
+      "status": "completed",
+      "user_id": null
+    },
+    {
+      "id": "cb31",
+      "name": "Admin ne ",
+      "sdt": "01912394213",
+      "address": "HCM city",
+      "email": "abcsacas@gmail.com",
+      "pay_type": "cod",
+      "items": [
+        {
+          "id": "4",
+          "name": "iphone 8 plus",
+          "price": 39.99,
+          "quantity": 1
+        },
+        {
+          "id": "7",
+          "name": "Dell XPS",
+          "price": 15.75,
+          "quantity": 1
+        }
+      ],
+      "total": 55.74,
+      "created_at": "2025-10-17T15:17:37.574Z",
+      "status": "pending",
+      "user_id": "2"
     }
   ]
 }
