@@ -101,6 +101,9 @@ export default createStore({
         state.cartItems = state.cartItems.filter(item => item.id !== itemId);
     }
   },
+  CLEAR_CART(state) {
+      state.cartItems = [];
+    },
   actions: {
     async fetchCart({ commit }) {
       try {
@@ -147,3 +150,4 @@ export default createStore({
     }
   }
 })
+
