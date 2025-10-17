@@ -175,7 +175,7 @@ onMounted(() => {
                     </div>
                     <div class="mt-auto d-flex justify-content-between align-items-center">
                       <p class="card-text mb-0 fs-5 text-danger fw-bold">${{ (item.price * item.quantity).toFixed(2) }}</p>
-                      <button @click="handleRemoveFromCart(item.id)" class="btn btn-sm btn-outline-danger">Xóa</button>
+                      <button @click="handleRemoveFromCart(item.id)" class="btn btn-sm btn-outline-danger">Delete</button>
                     </div>
                   </div>
                 </div>

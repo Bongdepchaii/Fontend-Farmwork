@@ -90,12 +90,13 @@ const logout = () => {
 
 // add cart
 const addProductToCart = async (product) => {
-  if (!localStorage.getItem('userlogin')) {
+  if (!loggedInUser) {
     if (confirm('Ban chua dang nhap hay dang nhap!')){
       router.push('/login')
     }
   } else {
-    await store.dispatch('addToCart', { product: product, quantity: 1 });
+    const userId = loggedInUser.value.id;
+    await store.dispatch('addToCart', { product: product, userId: userId, quantity: 1 });
     alert(`Da add "${product.title}" vao gio hang!`);
   }
 };
