@@ -51,7 +51,8 @@ const goBack = () => {
 
 const handleAddToCart = (item) => {
     store.dispatch('addToCart', { product: item, quantity: 1 });
-    alert(`Đã thêm "${item.title}" vào giỏ hàng!`);
+    alert(`Add product id: "${item.title}" to cart!`);
+    router.push('cart')
 };
 
 </script>

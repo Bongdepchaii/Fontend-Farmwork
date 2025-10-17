@@ -142,7 +142,7 @@ export default createStore({
             await axios.delete(`${cartApiUrl}/${itemId}`);
             commit('REMOVE_ITEM_FROM_CART', itemId);
         } catch (error) {
-            console.error("Lỗi khi xóa sản phẩm khỏi giỏ hàng:", error);
+            console.error("error: delete", error);
         }
     }
   }
