@@ -5,7 +5,6 @@ import axios from 'axios';
 // import { VNPay, ignoreLogger } from 'vnpay'; 
 
 const API_URL = 'http://localhost:3000';
-
 const store = useStore();
 const cartItems = computed(() => store.state.cartItems);
 const totalCartPrice = computed(() => store.getters.totalCartPrice);
@@ -85,10 +84,10 @@ const handleSubmit = async () => {
     if (response.status === 201) {
       alert('Order successfly');
       clearData(); 
-      store.dispatch('clearCart'); 
+      store.dispatch('clearCart', user_id); 
     }
   } catch (error) {
-    // console.error("Error order:", error);
+    console.error("Error order:", error);
     alert("Error");
   }
 };
@@ -113,7 +112,12 @@ const handleSubmit = async () => {
 // };
 
 onMounted(() => {
-  store.dispatch('fetchCart');
+
+  if(loggedInUser.value){
+    store.dispatch('fetchCart', loggedInUser.value.id);
+  } else{
+    console.log('chua login khong tai duoc gio hang')
+  }
 });
 
 </script>

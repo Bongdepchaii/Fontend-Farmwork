@@ -40,50 +40,68 @@ export default createStore({
 },
 
   actions: {
-  async fetchCart({ commit }) {
+  async fetchCart({ commit }, userId) {
+    if(!userId){
+      commit('SET_CART', []);
+      return;
+    }
     try {
-      const response = await axios.get(cartApiUrl);
+      const response = await axios.get(`${cartApiUrl}?userId=${userId}`);
       commit('SET_CART', response.data);
     } catch (error) {
-      console.error("Lỗi khi lấy giỏ hàng:", error);
+      console.error("Error set cart:", error);
     }
   },
   async addToCart({ state, commit, dispatch }, { product, quantity, userId }) {
-    const itemInCart = state.cartItems.find(item => item.id === product.id);
-    try {
-      if (itemInCart) {
-        const newQuantity = itemInCart.quantity + quantity;
-        const response = await axios.patch(`${cartApiUrl}/${itemInCart.id}`, {
-          quantity: newQuantity
-        });
-        commit('UPDATE_ITEM_QUANTITY', response.data);
-      } else {
-        // Chỉ lấy những thuộc tính cần thiết để tránh lỗi
-        const newItem = {
-          userId: userId,
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.image,
-          category: product.category,
-          quantity: quantity
-        };
-        const response = await axios.post(cartApiUrl, newItem);
-        commit('ADD_ITEM_TO_CART', response.data);
+      try {
+        const checkResponse = await axios.get(`${cartApiUrl}?productId=${product.id}&userId=${userId}`);
+        const existingItem = checkResponse.data[0];
+
+        if (existingItem) {
+          const newQuantity = existingItem.quantity + quantity;
+          const response = await axios.patch(`${cartApiUrl}/${existingItem.id}`, {
+            quantity: newQuantity
+          });
+          commit('UPDATE_ITEM_QUANTITY', response.data);
+        } else {
+          const newItem = {
+            userId: userId,
+            productId: product.id, 
+            title: product.title,
+            price: product.price,
+            image: product.image,
+            category: product.category,
+            quantity: quantity
+          };
+          const response = await axios.post(cartApiUrl, newItem);
+          commit('ADD_ITEM_TO_CART', response.data);
+        }
+      } catch (error) {
+        console.error("Erorr add cart:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi thêm vào giỏ hàng:", error);
+      await dispatch('fetchCart', userId);
+    },
+
+    async removeFromCart({ commit }, itemId) {
+      try {
+        await axios.delete(`${cartApiUrl}/${itemId}`);
+        commit('REMOVE_ITEM_FROM_CART', itemId);
+      } catch (error) {
+        console.error("error: delete", error);
+      }
+    },
+    async clearCart({ commit, state }, userId) {
+        if (!userId) return;
+        try {
+            const deletePromises = state.cartItems.map(item => 
+                axios.delete(`${cartApiUrl}/${item.id}`)
+            );
+            await Promise.all(deletePromises);
+            commit('CLEAR_CART');
+        } catch (error) {
+            console.error("Lỗi khi dọn dẹp giỏ hàng:", error);
+        }
     }
-  },
-  // Thêm action để xóa sản phẩm
-  async removeFromCart({ commit }, itemId) {
-    try {
-      await axios.delete(`${cartApiUrl}/${itemId}`);
-      commit('REMOVE_ITEM_FROM_CART', itemId);
-    } catch (error) {
-      console.error("error: delete", error);
-    }
-  }
 }
 })
 

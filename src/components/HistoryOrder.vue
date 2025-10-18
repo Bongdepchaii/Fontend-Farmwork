@@ -128,8 +128,8 @@ const logout = () => {
 
 
     <div class="container py-5">
-            <h1 style="font-family: 'Times New Roman', Times, serif;">HISTORY</h1>
-            <br>
+        <h1 style="font-family: 'Times New Roman', Times, serif;">HISTORY</h1>
+        <br>
         <nav class="navbar navbar-expand-lg navbar-light bg-light rounded mb-4">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse">
@@ -163,7 +163,8 @@ const logout = () => {
             <thead class="table-dark">
                 <tr>
                     <th scope="col">Stt</th>
-                    <th scope="col">id order</th>
+                    <th scope="col">id User</th>
+                    <th scope="col">id Order</th>
                     <th scope="col">Name </th>
                     <th scope="col">Phone</th>
                     <th scope="col">Address</th>
@@ -177,6 +178,7 @@ const logout = () => {
             <tbody>
                 <tr v-for="(item, index) in filteredOrders" :key="item.id">
                     <th scope="row">{{ index + 1 }}</th>
+                    <th>#{{ item.user_id }}</th>
                     <th>#{{ item.id }}</th>
                     <td>{{ item.name }}</td>
                     <td>{{ item.sdt }}</td>

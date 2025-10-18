@@ -46,12 +46,12 @@ const loaddata = async () => {
 }
 
 // next trang
-const change_page = (newpage) => {
-  if (newpage < 1) return
-  if (newpage > totalpage.value) return
-  page.value = newpage
-  loaddata()
-}
+// const change_page = (newpage) => {
+//   if (newpage < 1) return
+//   if (newpage > totalpage.value) return
+//   page.value = newpage
+//   loaddata()
+// }
 
 watch(search, () => {
   page.value = 1
@@ -60,7 +60,11 @@ watch(search, () => {
 
 onMounted(() => {
   loaddata()
-  store.dispatch('fetchCart')
+  if(loggedInUser.value){
+  store.dispatch('fetchCart', loggedInUser.value.id);
+} else {
+    console.log('not login, no load data cart.');
+  }
 })
 
 // User
@@ -90,7 +94,7 @@ const logout = () => {
 
 // add cart
 const addProductToCart = async (product) => {
-  if (!loggedInUser) {
+  if (!localStorage.getItem('userlogin')) {
     if (confirm('Ban chua dang nhap hay dang nhap!')){
       router.push('/login')
     }

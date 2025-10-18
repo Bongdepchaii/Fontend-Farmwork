@@ -52,6 +52,17 @@ const fetchUserData = async (userId) => {
     }
 };
 
+const activeFilter = ref('pending');
+
+const filteredOrders = computed(() => {
+    return orders.value.filter(order => order.status === activeFilter.value);
+});
+
+const setFilter = (status) => {
+    activeFilter.value = status
+}
+
+
 
 
 // onMounted(() => {
@@ -171,9 +182,17 @@ const logout = () => {
 
     <div class="container py-5" style="max-width: 800px;">
         <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="card-title mb-4 text-center">PROFILE</h2>
 
+            <div class="card-body p-4">
+                <div class="row">
+                    <div class="col-md-3">
+                        <RouterLink class="nav-link" :to="`/history/${loggedInUser.id}`">History order</RouterLink>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="card-title mb-4 text-center" style="font-family: 'Times New Roman', Times, serif;">
+                            PROFILE</h2>
+                    </div>
+                </div>
                 <form @submit.prevent="updateProfile">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -193,13 +212,13 @@ const logout = () => {
                         </div>
 
                         <div class="col-md-6">
-                            <label for="inputAge" class="form-label">Tuổi</label>
+                            <label for="inputAge" class="form-label">Age</label>
                             <input type="number" v-model="user.age" class="form-control" id="inputAge"
-                                placeholder="Nhập tuổi của bạn">
+                                placeholder="Enter age">
                         </div>
 
                         <div class="col-md-6">
-                            <label for="inputSex" class="form-label">Giới tính</label>
+                            <label for="inputSex" class="form-label">Sex</label>
                             <select v-model="user.sex" id="inputSex" class="form-select">
                                 <option value="" disabled>Chosee...</option>
                                 <option value="Nam">Nam</option>
@@ -210,7 +229,7 @@ const logout = () => {
                         <div class="col-12">
                             <label for="inputInterests" class="form-label">favorite</label>
                             <input type="text" v-model="user.interests" class="form-control" id="inputInterests"
-                                placeholder="VD: iPhone, iPad, Macbook,...">
+                                placeholder="iPhone, iPad, Macbook,...">
                         </div>
 
                         <div class="col-12">
