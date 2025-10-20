@@ -15,11 +15,13 @@
     "@vercel/speed-insights": "^1.2.0",
     "axios": "^1.12.2",
     "bootstrap": "^5.3.8",
+    "chart.js": "^4.5.1",
     "install": "^0.13.0",
     "json": "^11.0.0",
     "server": "^1.0.42",
     "sever": "^0.0.2",
     "vue": "^3.5.18",
+    "vue-chartjs": "^5.3.2",
     "vue-router": "^4.6.0",
     "vuex": "^4.0.2"
   },

@@ -14,14 +14,34 @@ const search = ref('')
 const page = ref(1)
 const pagesize = 12
 
+const categories = ref([]) 
+const selectedCategory = ref('') 
+
+const allProducts = ref([]); 
+const completedOrders = ref([]);
+const loadingTopSellers = ref(true);
+
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get('http://localhost:3000/products')
+    const allProducts = response.data
+    const uniqueCategories = [...new Set(allProducts.map(product => product.category))]
+    categories.value = uniqueCategories.filter(Boolean);
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+  }
+}
+
+
 // count so trang
-const totalpage = computed(() => Math.ceil(total.value / pagesize))
+// const totalpage = computed(() => Math.ceil(total.value / pagesize))
 
 const loaddata = async () => {
   try {
     const params = { _page: page.value, _limit: pagesize }
     if (search.value) params.title_like = search.value
-
+    if (selectedCategory.value) params.category = selectedCategory.value
     const response = await axios.get('http://localhost:3000/products', { params })
     Product.value = response.data
 
@@ -45,6 +65,58 @@ const loaddata = async () => {
   }
 }
 
+const loadDataForTopSellers = async () => {
+  loadingTopSellers.value = true;
+  try {
+    const [productsRes, ordersRes] = await Promise.all([
+      axios.get('http://localhost:3000/products'),
+      axios.get('http://localhost:3000/orders?status=completed')
+    ]);
+    allProducts.value = productsRes.data;
+    completedOrders.value = ordersRes.data;
+  } catch (error) {
+    console.error('Loi tai du lieu top sellers:', error);
+  } finally {
+    loadingTopSellers.value = false;
+  }
+};
+
+const topSellingProducts = computed(() => {
+  if (allProducts.value.length === 0 || completedOrders.value.length === 0) return [];
+
+  const productSales = {}; 
+
+  completedOrders.value.forEach(order => {
+    if (order.items) { 
+      order.items.forEach(item => {
+        const productId = item.id;
+        const quantity = item.quantity;
+        if (productSales[productId]) {
+          productSales[productId] += quantity;
+        } else {
+          productSales[productId] = quantity;
+        }
+      });
+    }
+  });
+
+  const salesArray = Object.keys(productSales).map(productId => ({
+    productId: productId,
+    quantity: productSales[productId]
+  }));
+
+  salesArray.sort((a, b) => b.quantity - a.quantity);
+
+  return salesArray.slice(0, 5).map(sale => {
+    const productInfo = allProducts.value.find(p => p.id === sale.productId);
+    return {
+      ...sale,
+      name: productInfo ? productInfo.title : 'N/A',
+      image: productInfo ? productInfo.image : '', 
+    };
+  });
+});
+
 // next trang
 // const change_page = (newpage) => {
 //   if (newpage < 1) return
@@ -58,11 +130,17 @@ watch(search, () => {
   loaddata()
 })
 
+watch(selectedCategory, () => {
+  page.value = 1
+  loaddata()
+})
+
 onMounted(() => {
   loaddata()
-  if(loggedInUser.value){
-  store.dispatch('fetchCart', loggedInUser.value.id);
-} else {
+  fetchCategories()
+  if (loggedInUser.value) {
+    store.dispatch('fetchCart', loggedInUser.value.id);
+  } else {
     console.log('not login, no load data cart.');
   }
 })
@@ -91,11 +169,10 @@ const logout = () => {
   }
 }
 
-
 // add cart
 const addProductToCart = async (product) => {
   if (!localStorage.getItem('userlogin')) {
-    if (confirm('Ban chua dang nhap hay dang nhap!')){
+    if (confirm('Ban chua dang nhap hay dang nhap!')) {
       router.push('/login')
     }
   } else {
@@ -110,6 +187,36 @@ const cartItemCount = computed(() => store.getters.cartItemCount);
 const goToCart = () => {
   router.push('Store')
 }
+
+// favorite
+const addToFavorites = async (product) => {
+if (!loggedInUser.value) {
+if (confirm('Bạn cần đăng nhập để thêm vào yêu thích! Đăng nhập ngay?')) {
+router.push('/login')
+ }
+ } else {
+const userId = loggedInUser.value.id;
+
+const payload = {
+userId: userId,
+productId: product.id,
+product: product, 
+added_at: new Date().toISOString() 
+ };
+
+try {
+
+const response = await axios.post('http://localhost:3000/favorite', payload);
+
+if (response.status === 201) { 
+ alert(`Đã thêm "${product.title}" vào danh sách yêu thích!`);
+ }
+} catch (error) {
+ console.error('LỖI KHI THÊM VÀO YÊU THÍCH:', error);
+alert('Có lỗi xảy ra, vui lòng thử lại.');
+}
+ }
+};
 
 </script>
 
@@ -127,18 +234,6 @@ div nav li {
 </style>
 
 <template>
-  <!-- <div class="container py-4 border-bottom mb-5">
-    <header style="margin-top: 30px;" class="d-flex align-items-center justify-content-between mb-3">
-      <RouterLink style="text-decoration: none;" to="Index"><h1 style="color: black;" class="h3 m-0">TBS</h1></RouterLink>
-      <div>
-        <RouterLink to="Product" class="btn btn-success me-2">Admin</RouterLink>
-        <RouterLink to="Login" class="btn btn-outline-danger" @click="logout()">Logout</RouterLink>
-      </div>
-      <form class="d-none d-sm-flex" role="search" @submit.prevent>
-        <input class="form-control form-control-sm" type="search" v-model="search" placeholder="Search..." />
-      </form>
-    </header>
-  </div>   -->
   <main>
     <div class="container py-4 border-bottom mb-5">
       <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -210,6 +305,22 @@ div nav li {
     </div>
 
     <div class="container py-2">
+
+      <div class="mb-4 text-center">
+        <button 
+          @click="selectedCategory = ''"
+          :class="['btn', 'me-2', 'mb-2', selectedCategory === '' ? 'btn-primary' : 'btn-outline-secondary']">
+          Tất cả
+        </button>
+
+        <button 
+          v-for="category in categories" 
+          :key="category" 
+          @click="selectedCategory = category"
+          :class="['btn', 'me-2', 'mb-2', selectedCategory === category ? 'btn-primary' : 'btn-outline-secondary']">
+          {{ category }}
+        </button>
+      </div>
       <div class="row g-4">
         <div class="col-md-3" v-for="Item in Product" :key="Item.id">
           <div class="card h-100 shadow-sm">
@@ -223,13 +334,20 @@ div nav li {
                   By <strong>Admin</strong>
                   <span class="badge text-bg-secondary float-end">{{ Item.category }}</span>
                 </p>
-                <p class="card-text">
-                  Lorem ipsum dolor sit amet...
+                <p class="card-text">quantity
+                  <span class="badge text-bg-info float-end">{{ Item.quantity }}</span>
                 </p>
               </RouterLink>
               <div class="mt-auto d-flex justify-content-between align-items-center">
                 <h6 class="card-subtitle text-danger mb-0">Price: {{ Item.price }}$</h6>
+                <div class="d-flex gap-1"> <button 
+                    @click="addToFavorites(Item)" 
+                    class="btn btn-outline-danger btn-sm" 
+                    title="Yêu thích">
+                    yeu thich
+                  </button>
                 <button @click="addProductToCart(Item)" class="btn btn-primary btn-sm">Add to cart</button>
+              </div>
               </div>
             </div>
           </div>
@@ -238,25 +356,11 @@ div nav li {
           <span class="alert alert-info">khong co san pham</span>
         </div>
       </div>
-      <!-- <nav aria-label="Post navigation" class="mt-4" v-if="totalpage > 1">
-        <ul class="pagination justify-content-center">
-          <li class="page-item" :class="{ disabled: page === 1 }">
-            <button class="page-link" @click="change_page(page - 1)" :disabled="page === 1">Previous</button>
-          </li>
-          <li class="page-item" v-for="p in totalpage" :key="p" :class="{ active: page === p }">
-            <button class="page-link" @click="change_page(p)">{{ p }}</button>
-          </li>
-          <li class="page-item" :class="{ disabled: page === totalpage }">
-            <button class="page-link" @click="change_page(page + 1)" :disabled="page === totalpage">Next</button>
-          </li>
-        </ul>
-      </nav> -->
-    </div>
+      </div>
   </main>
   <footer style="margin-top: 50px;" class="py-4 bg-dark text-white">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
       <span>© <span id="year">2025</span> TBS</span>
-      <!-- <router-link to="Index"  class="btn btn-outline-light btn-sm">Go back to home</router-link> -->
-    </div>
+      </div>
   </footer>
 </template>

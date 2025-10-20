@@ -182,6 +182,9 @@ const reset = () => {
           <li class="nav-item">
             <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History</RouterLink>
           </li>
+          <li class="nav-item">
+            <RouterLink style="margin-left: 15px;" to="Chart" class="nav-link" aria-current="page">Chart</RouterLink>
+          </li>
           <button style="border: none;" class="navbar-toggler">
             <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
 

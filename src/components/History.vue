@@ -7,6 +7,7 @@ const router = useRouter()
 const route = useRoute()
 const message = ref('');
 const orders = ref([])
+const userFeedbacks = ref([])
 // const isAdmin = ref(false);
 const user = reactive({
     id: null,
@@ -47,6 +48,7 @@ const fetchUserData = async (userId) => {
         if (response.status === 200) {
             Object.assign(user, response.data);
             await fetchUserOrders(userId);
+            await fetchUserFeedbacks(userId);
         }
     } catch (error) {
         console.error("error", error);
@@ -65,6 +67,28 @@ const fetchUserOrders = async (userId) => {
         message.value = "not load history order";
     }
 }
+
+const fetchUserFeedbacks = async (userId) => {
+    try {
+        const response = await axios.get(`http://localhost:3000/feedback?userId=${userId}`);
+        if (response.status === 200) {
+            userFeedbacks.value = response.data;
+        }
+    } catch (error) {
+        console.error('Loi khi tai feedback cua user:', error);
+    }
+};
+
+const isProductReviewedInOrder = (orderId, productId) => {
+    return userFeedbacks.value.some(fb => fb.orderId === orderId && fb.productId === productId);
+};
+
+const canReviewAnyProductInOrder = (order) => {
+    if (!order || !order.items || order.items.length === 0) {
+        return false;
+    }
+    return order.items.some(item => !isProductReviewedInOrder(order.id, item.id));
+};
 
 const handleCancelOrder = async (item) => {
     if (confirm("Are u sure remove order here?")) {
@@ -87,14 +111,61 @@ const handleCancelOrder = async (item) => {
     }
 };
 
-const goToReview = async (item) => {
-    const reviewText = prompt(`Vui lòng nhập đánh giá của bạn cho đơn hàng #${item.id}:`);
+// History.vue
+
+const goToReview = async (item) => { // 'item' la OBJECT DON HANG
+
+    let productIdToReview = null;
+    let availableProductsToReview = []; // Mang luu cac san pham chua review
+
+    // Loc ra cac san pham chua duoc review trong don hang nay
+    if (item.items && item.items.length > 0) {
+        availableProductsToReview = item.items.filter(product => !isProductReviewedInOrder(item.id, product.id));
+    }
+
+    // Neu khong con san pham nao de review (mac du nut van hien - truong hop hiem)
+    if (availableProductsToReview.length === 0) {
+         alert("Tat ca san pham trong don hang nay da duoc danh gia.");
+         return;
+    } 
+    // Neu chi con 1 san pham chua review
+    else if (availableProductsToReview.length === 1) {
+        productIdToReview = availableProductsToReview[0].id;
+        console.log("Chi con 1 san pham:", availableProductsToReview[0].name); // Log ten sp
+    } 
+    // Neu con nhieu san pham chua review
+    else {
+        let productOptions = "Chon san pham ban muon danh gia:\n";
+        availableProductsToReview.forEach((product, index) => {
+            productOptions += `${index + 1}. ${product.name}\n`; 
+        });
+        productOptions += `\nVui long chon so thu tu:`;
+
+        let choice = prompt(productOptions); 
+        let choiceIndex = parseInt(choice) - 1; 
+
+        if (!isNaN(choiceIndex) && choiceIndex >= 0 && choiceIndex < availableProductsToReview.length) {
+            productIdToReview = availableProductsToReview[choiceIndex].id; 
+        } else {
+            alert("Lua chon khong hop le.");
+            return; 
+        }
+    }
+   
+    // --- Phan gui feedback giu nguyen ---
+    if (!productIdToReview) { 
+         alert("Khong xac dinh duoc san pham de danh gia.");
+         return;
+    }
+
+ const reviewText = prompt(`Vui long nhap danh gia cho san pham vua chon (trong don hang #${item.id}):`);
 
     if (reviewText && reviewText.trim() !== "") {
         const feedbackPayload = {
-            orderId: item.id,
+            orderId: item.id, // Van luu orderId de biet feedback nay tu don hang nao
+            productId: productIdToReview, 
             userId: user.id,
-            username: user.name,
+            username: user.name, // Nen dung user.username neu co
             review: reviewText,
             created_at: new Date().toISOString()
         };
@@ -102,15 +173,16 @@ const goToReview = async (item) => {
         try {
             const response = await axios.post('http://localhost:3000/feedback', feedbackPayload);
             if (response.status === 201) {
-                message.value = "Gửi đánh giá thành công!";
+                message.value = "Gui danh gia thanh cong!";
+                userFeedbacks.value.push(response.data);
                 setTimeout(() => message.value = '', 3000);
             }
         } catch (error) {
-            console.error("Lỗi khi gửi đánh giá:", error);
-            message.value = "Gửi đánh giá thất bại.";
+            console.error("LOI KHI GUI DANH GIA:", error);
+            message.value = "Gui danh gia that bai.";
         }
-    } else {
-        alert("Bạn chưa nhập nội dung đánh giá.");
+    } else if (reviewText !== null) { 
+        alert("Ban chua nhap noi dung danh gia.");
     }
 };
 
@@ -192,20 +264,9 @@ const logout = () => {
         </nav>
     </div>
 
-    <div class="container py-5" style="max-width: 800px;">
+<div class="container py-5" style="max-width: 1000px;"> 
         <div class="card shadow-sm">
             <div class="card-body p-4">
-                <div class="row">
-                    <div class="col-md-3">
-                        <button class="nav-link" @click="router.back()"> &larr; Back</button>
-                    </div>
-                    <div class="col-md-6">
-                        <h2 class="card-title mb-4 text-center" style="font-family: 'Times New Roman', Times, serif;">
-                            HISTORY PRODUCT
-                        </h2>
-                    </div>
-                </div>
-
                 <div v-if="message" class="alert alert-info" role="alert">
                     {{ message }}
                 </div>
@@ -215,8 +276,9 @@ const logout = () => {
                         <tr>
                             <th scope="col">Stt</th>
                             <th scope="col">Id Order</th>
+                            <th scope="col">San pham</th>
                             <th scope="col">Date created</th>
-                            <th scope="col">total</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Status</th>
                             <th scope="col" class="text-center">Act</th>
                         </tr>
@@ -225,6 +287,14 @@ const logout = () => {
                         <tr v-for="(item, index) in orders" :key="item.id">
                             <th scope="row">{{ index + 1 }}</th>
                             <th>#{{ item.id }}</th>
+                            <td>
+                                <div v-for="product in item.items" :key="product.id" class="mb-1">
+                                    <RouterLink :to="`/product-detail/${product.id}`" class="text-dark text-decoration-none">
+                                        {{ product.name }}
+                                    </RouterLink>
+                                    <small class="text-muted"> (x{{ product.quantity }})</small>
+                                </div>
+                            </td>
                             <td>{{ formatDate(item.created_at) }}</td>
                             <td>{{ item.total.toLocaleString() }} $</td>
                             <td>
@@ -235,25 +305,28 @@ const logout = () => {
                                 <span v-else-if="item.status === 'cancelled'" class="badge bg-danger">{{ item.status }}</span>
                                 <span v-else class="badge bg-secondary">{{ item.status }}</span>
                             </td>
-                            
+
                             <td class="text-center">
                                 <button v-if="item.status === 'pending'" 
-                                        class="btn btn-sm btn-outline-danger" 
+                                        class="btn btn-sm btn-outline-danger"
                                         @click="handleCancelOrder(item)">
                                     Remove
                                 </button>
                                 
-                                <button v-else-if="item.status === 'completed'" 
-                                        class="btn btn-sm btn-outline-primary" 
-                                        @click="goToReview(item)">
-                                    Feed back
-                                </button>
-                                
-                                <span v-else class="text-muted">--</span>
+                                <template v-else-if="item.status === 'completed'">
+                                    <span v-if="!canReviewAnyProductInOrder(item)" class="badge bg-secondary"> 
+                                        done feedback
+                                    </span>
+                                    <button v-else class="btn btn-sm btn-outline-primary" @click="goToReview(item)">
+                                        Feed back
+                                    </button>
+                                </template>
+
+                                <span v-else class="text-muted">not act</span>
                             </td>
-                        </tr>
+                            </tr>
                         <tr v-if="orders.length === 0">
-                            <td colspan="7" class="text-center text-muted">Bạn chưa có đơn hàng nào.</td>
+                            <td colspan="8" class="text-center text-muted">Ban chua co don hang nao.</td>
                         </tr>
                     </tbody>
                 </table>

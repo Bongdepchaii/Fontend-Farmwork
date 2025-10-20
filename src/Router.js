@@ -13,6 +13,7 @@ import Store from './components/Cart.vue'
 import User from './components/User.vue'
 import HistoryOrder from './components/HistoryOrder.vue'
 import History from './components/History.vue'
+import Chart from './components/Chart.vue'
 
 const routes = [
     { path: '/', name: 'Home', component: Index, meta: { isAuth: false } },
@@ -28,6 +29,7 @@ const routes = [
     { path: '/user', name: 'User', component: User, meta: { isAuth: false } },
     { path: '/historyorder', name: 'HistoryOrder', component: HistoryOrder, meta: { isAuth: false } },
     { path: '/history/:id', name: 'History', component: History, meta: { isAuth: false } },
+    { path: '/chart', name: 'Chart', component: Chart, meta: { isAuth: false } },
     {
         path: '/:pathMatch(.*)*',
         name: 'NotFound',
