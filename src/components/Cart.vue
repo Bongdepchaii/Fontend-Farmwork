@@ -17,14 +17,20 @@ const orderInfo = reactive({
   pay_type: 'cod'
 });
 
+
+// login
 const loggedInUser = computed(() => {
   const userData = localStorage.getItem('userlogin');
-  return userData ? JSON.parse(userData) : null;
+  if (userData) {
+    return JSON.parse(userData);
+  }
+  return null;
 });
 
 const isAdmin = computed(() => {
   return loggedInUser.value && loggedInUser.value.role.toLowerCase() === 'admin';
 });
+
 
 const logout = () => {
   if (confirm("Are you sure logout")) {

@@ -22,7 +22,7 @@
     "sever": "^0.0.2",
     "vue": "^3.5.18",
     "vue-chartjs": "^5.3.2",
-    "vue-router": "^4.6.0",
+    "vue-router": "^4.6.3",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

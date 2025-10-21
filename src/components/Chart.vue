@@ -1,13 +1,15 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import axios from 'axios';
-import { Bar } from 'vue-chartjs'; 
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import { Bar } from 'vue-chartjs'; 
 
 
-
+// bieu do 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 
+const router = useRouter()
 const orders = ref([]);
 const products = ref([]);
 const users = ref([]);
@@ -19,7 +21,7 @@ const revenueChartData = ref({
   datasets: [
     {
       label: 'Doanh thu ($)',
-      backgroundColor: '#f87979',
+      backgroundColor: 'blue',
       data: [] 
     }
   ]
@@ -131,7 +133,7 @@ const customerSpending = computed(() => {
     const userInfo = users.value.find(u => u.id === spend.userId);
     return {
       ...spend,
-      name: userInfo ? (userInfo.username || userInfo.name) : 'Khách hàng không xác định' 
+      name: userInfo ? (userInfo.username || userInfo.name) : 'Khong xac dinh duoc khach hang' 
     };
   });
 });
@@ -198,9 +200,6 @@ const logout = () => {
           </li>
           <li class="nav-item">
             <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink style="margin-left: 15px;" to="Chart" class="nav-link" aria-current="page">Chart</RouterLink>
           </li>
           <button style="border: none;" class="navbar-toggler">
             <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">

@@ -14,10 +14,10 @@ const search = ref('')
 const page = ref(1)
 const pagesize = 12
 
-const categories = ref([]) 
-const selectedCategory = ref('') 
+const categories = ref([])
+const selectedCategory = ref('')
 
-const allProducts = ref([]); 
+const allProducts = ref([]);
 const completedOrders = ref([]);
 const loadingTopSellers = ref(true);
 
@@ -84,10 +84,10 @@ const loadDataForTopSellers = async () => {
 const topSellingProducts = computed(() => {
   if (allProducts.value.length === 0 || completedOrders.value.length === 0) return [];
 
-  const productSales = {}; 
+  const productSales = {};
 
   completedOrders.value.forEach(order => {
-    if (order.items) { 
+    if (order.items) {
       order.items.forEach(item => {
         const productId = item.id;
         const quantity = item.quantity;
@@ -112,7 +112,7 @@ const topSellingProducts = computed(() => {
     return {
       ...sale,
       name: productInfo ? productInfo.title : 'N/A',
-      image: productInfo ? productInfo.image : '', 
+      image: productInfo ? productInfo.image : '',
     };
   });
 });
@@ -138,6 +138,7 @@ watch(selectedCategory, () => {
 onMounted(() => {
   loaddata()
   fetchCategories()
+  loadDataForTopSellers()
   if (loggedInUser.value) {
     store.dispatch('fetchCart', loggedInUser.value.id);
   } else {
@@ -190,32 +191,32 @@ const goToCart = () => {
 
 // favorite
 const addToFavorites = async (product) => {
-if (!loggedInUser.value) {
-if (confirm('Bạn cần đăng nhập để thêm vào yêu thích! Đăng nhập ngay?')) {
-router.push('/login')
- }
- } else {
-const userId = loggedInUser.value.id;
+  if (!loggedInUser.value) {
+    if (confirm('Bạn cần đăng nhập để thêm vào yêu thích! Đăng nhập ngay?')) {
+      router.push('/login')
+    }
+  } else {
+    const userId = loggedInUser.value.id;
 
-const payload = {
-userId: userId,
-productId: product.id,
-product: product, 
-added_at: new Date().toISOString() 
- };
+    const payload = {
+      userId: userId,
+      productId: product.id,
+      product: product,
+      added_at: new Date().toISOString()
+    };
 
-try {
+    try {
 
-const response = await axios.post('http://localhost:3000/favorite', payload);
+      const response = await axios.post('http://localhost:3000/favorite', payload);
 
-if (response.status === 201) { 
- alert(`Đã thêm "${product.title}" vào danh sách yêu thích!`);
- }
-} catch (error) {
- console.error('LỖI KHI THÊM VÀO YÊU THÍCH:', error);
-alert('Có lỗi xảy ra, vui lòng thử lại.');
-}
- }
+      if (response.status === 201) {
+        alert(`Đã thêm "${product.title}" vào danh sách yêu thích!`);
+      }
+    } catch (error) {
+      console.error('LỖI KHI THÊM VÀO YÊU THÍCH:', error);
+      alert('Có lỗi xảy ra, vui lòng thử lại.');
+    }
+  }
 };
 
 </script>
@@ -230,6 +231,18 @@ img {
 div nav li {
   margin-left: 15px;
   list-style: none;
+}
+
+ img {
+  height: 200px;
+  object-fit: contain;
+  /* GIUP ANH KHONG BI VO KHI CAO BANG NHAU */
+  width: 100%;
+}
+.top-seller-title {
+  min-height: 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
 
@@ -253,6 +266,11 @@ div nav li {
                 <RouterLink to="/product" class="nav-link">Admin</RouterLink>
               </li>
               <template v-if="loggedInUser">
+                <li class="nav-item">
+                  <RouterLink class="nav-link" :to="`/favorite/${loggedInUser.id}`">
+                    Favorite
+                  </RouterLink>
+                </li>
                 <li class="nav-item">
                   <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
                     Hi, {{ loggedInUser.username }}
@@ -303,20 +321,47 @@ div nav li {
         </div>
       </nav>
     </div>
-
     <div class="container py-2">
+      <section class="mb-5">
+        <h2 class="text-center mb-4">Top 5 San Pham Ban Chay</h2>
+        
+        <div v-if="loadingTopSellers" class="text-center">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Dang tai...</span>
+          </div>
+        </div>
 
+        <div v-else>
+          <div v-if="topSellingProducts.length > 0" class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
+            
+            <div v-for="(product) in topSellingProducts" :key="product.productId" class="col">
+              <div class="card h-100 shadow-sm text-center">
+                <RouterLink :to="`/product-detail/${product.productId}`" class="text-decoration-none text-dark d-flex flex-column h-100">
+                  
+                  <img :src="product.image" class="card-img-top p-3 top-seller-img" :alt="product.name">
+                  
+                  <div class="card-body p-2 d-flex flex-column">
+                    <h6 class="card-title small top-seller-title">{{ product.name }}</h6>
+                    <p class="card-text text-danger fw-bold mt-auto mb-0">Da ban: {{ product.quantity }}</p>
+                  </div>
+                </RouterLink>
+              </div>
+            </div>
+
+          </div>
+          
+          <div v-else class="alert alert-info text-center">
+            Chua co du lieu san pham ban chay.
+          </div>
+        </div>
+      </section>
       <div class="mb-4 text-center">
-        <button 
-          @click="selectedCategory = ''"
+        <button @click="selectedCategory = ''"
           :class="['btn', 'me-2', 'mb-2', selectedCategory === '' ? 'btn-primary' : 'btn-outline-secondary']">
           Tất cả
         </button>
 
-        <button 
-          v-for="category in categories" 
-          :key="category" 
-          @click="selectedCategory = category"
+        <button v-for="category in categories" :key="category" @click="selectedCategory = category"
           :class="['btn', 'me-2', 'mb-2', selectedCategory === category ? 'btn-primary' : 'btn-outline-secondary']">
           {{ category }}
         </button>
@@ -334,20 +379,19 @@ div nav li {
                   By <strong>Admin</strong>
                   <span class="badge text-bg-secondary float-end">{{ Item.category }}</span>
                 </p>
-                <p class="card-text">quantity
+                <p style="margin-bottom: 15px;" class="card-text">quantity
                   <span class="badge text-bg-info float-end">{{ Item.quantity }}</span>
                 </p>
               </RouterLink>
               <div class="mt-auto d-flex justify-content-between align-items-center">
                 <h6 class="card-subtitle text-danger mb-0">Price: {{ Item.price }}$</h6>
-                <div class="d-flex gap-1"> <button 
-                    @click="addToFavorites(Item)" 
-                    class="btn btn-outline-danger btn-sm" 
-                    title="Yêu thích">
-                    yeu thich
+                <div class="d-flex gap-1"> <button @click="addToFavorites(Item)" class="btn btn-outline-danger btn-sm">
+                    favorite
                   </button>
-                <button @click="addProductToCart(Item)" class="btn btn-primary btn-sm">Add to cart</button>
-              </div>
+                  <button v-if="Item.quantity > 0" @click="addProductToCart(Item)" class="btn btn-primary btn-sm">Add to
+                    cart</button>
+                  <button v-else class="btn btn-secondary btn-sm" disabled>out of stock</button>
+                </div>
               </div>
             </div>
           </div>
@@ -356,11 +400,11 @@ div nav li {
           <span class="alert alert-info">khong co san pham</span>
         </div>
       </div>
-      </div>
+    </div>
   </main>
   <footer style="margin-top: 50px;" class="py-4 bg-dark text-white">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-3">
       <span>© <span id="year">2025</span> TBS</span>
-      </div>
+    </div>
   </footer>
 </template>

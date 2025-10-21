@@ -89,7 +89,7 @@ const loggedInUser = computed(() => {
 const addToFavorites = async (product) => {
 
     if (!loggedInUser.value) {
-        if (confirm('Bạn cần đăng nhập để thêm vào yêu thích! Đăng nhập ngay?')) {
+        if (confirm('You can login will add favorite here')) {
             router.push('/login')
         }
     } else {
@@ -106,40 +106,40 @@ const addToFavorites = async (product) => {
         try {
             const response = await axios.post('http://localhost:3000/favorite', payload);
             if (response.status === 201) {
-                alert(`Đã thêm "${product.title}" vào danh sách yêu thích!`);
+                alert(`add "${product.title}" favorite successfly!`);
             }
         } catch (error) {
-            console.error('LỖI KHI THÊM VÀO YÊU THÍCH:', error);
-            alert('Có lỗi xảy ra, vui lòng thử lại.');
+            console.error('Error add product to favirite', error);
+            alert('Erorr add favorite try again.');
         }
     }
 };
 
 const addProductToCart = async (product) => {
-if (!localStorage.getItem('userlogin')) {
- if (confirm('Bạn chưa đăng nhập, đăng nhập ngay?')) {
- router.push('/login');
- }
- return; 
- }
+    if (!localStorage.getItem('userlogin')) {
+        if (confirm('chua dang nhap? hay dang nhap')) {
+            router.push('/login');
+        }
+        return;
+    }
 
     if (product.quantity <= 0) {
-        alert("Sản phẩm này đã hết hàng, không thể thêm vào giỏ.");
+        alert("Product het hang not order");
         return; // Dừng hàm
     }
 
-try {
+    try {
 
-await store.dispatch('addToCart', { 
-            product: { ...product }, 
-            quantity: 1 
+        await store.dispatch('addToCart', {
+            product: { ...product },
+            quantity: 1
         });
 
-alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
+        alert(`add "${product.title}" to cart!`);
 
- } catch (error) {
-        console.error("Lỗi khi thêm vào giỏ hàng:", error);
-        alert("Có lỗi xảy ra khi thêm vào giỏ hàng.");
+    } catch (error) {
+        console.error("error cart", error);
+        alert("error xay ra khi them vao gio.");
     }
 };
 
@@ -157,22 +157,21 @@ alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
                     <div class="col-md-6 d-flex flex-column">
                         <div class="product-info">
                             <span class="badge bg-secondary mb-2 product-category">Danh muc {{ product.category
-                                }}</span>
+                            }}</span>
                             <h1 class="product-title">{{ product.title }}</h1>
                             <p class="product-price">Gia: ${{ product.price }}</p>
                             <div v-if="product.quantity !== undefined" class="mb-3">
                                 <div v-if="product.quantity <= 0" class="alert alert-danger" role="alert">
-                                    <strong>Hết hàng!</strong> Sản phẩm này hiện đã hết hàng.
+                                    <strong>not empty product</strong>.
                                 </div>
                                 <div v-else-if="product.quantity <= 3" class="alert alert-warning" role="alert">
-                                    <strong>Sắp hết hàng!</strong> Chỉ còn <strong>{{ product.quantity }}</strong> sản
-                                    phẩm.
+                                    Almost out of stock! Shop have quantity <strong>{{ product.quantity }}</strong> product!
                                 </div>
                             </div>
 
                             <p class="product-description">Mota: {{ product.description }}</p>
                         </div>
-                        <div class="product-actions mt-auto">
+                        <div class="product-actions mt-auto ">
                             <button @click="goBack()" class="btn btn-outline-secondary">
                                 Back
                             </button>
@@ -180,19 +179,19 @@ alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
                                 class="btn btn-outline-danger" title="Yêu thích">
                                 Thêm vào Yêu thích
                             </button>
-                            <button style="margin-left: 15px;" @click="addProductToCart(product)" class="btn"
+                            <button  v-if="product.quantity > 0" style="margin-left: 15px;" @click="addProductToCart(product)" class="btn"
                                 :class="product.quantity > 0 ? 'btn-success' : 'btn-secondary'"
                                 :disabled="product.quantity <= 0">
-                                <span v-if="product.quantity > 0">Add to cart</span>
-                                <span v-else>Hết hàng</span>
+                                <span >Add to cart</span>
                             </button>
+                            <span v-else  style="margin-left: 15px;" class="alert alert-warning" >Hết hàng</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="product-reviews mt-5">
-            <h2 class="mb-4">Danh Gia San Pham</h2>
+            <h2 class="mb-4">Feed back!</h2>
             <div v-if="feedbacks.length > 0">
                 <div v-for="fb in feedbacks" :key="fb.id" class="card mb-3 shadow-sm">
                     <div class="card-body">
@@ -205,7 +204,7 @@ alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
                 </div>
             </div>
             <div v-else>
-                <p class="text-muted">Chua co danh gia nao cho san pham nay.</p>
+                <p class="text-muted">not empty feed back product here</p>
             </div>
         </div>
         <div v-if="productCategory.length > 0" class="related-products mt-5">
@@ -229,12 +228,11 @@ alert(`Đã thêm "${product.title}" vào giỏ hàng!`);
             </div>
         </div>
     </div>
-
 </template>
 
 <style scoped>
 .product-detail-card {
-    border: none;
+    border: none; 
     padding: 1.5rem;
 }
 
