@@ -3,7 +3,8 @@ import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-import { Bar } from 'vue-chartjs'; 
+import { Bar } from 'vue-chartjs';
+// import { name } from 'server/plugins/log';
 
 
 // bieu do 
@@ -17,12 +18,12 @@ const loading = ref(true);
 const error = ref(null);
 
 const revenueChartData = ref({
-  labels: [], 
+  labels: [],
   datasets: [
     {
       label: 'Doanh thu ($)',
       backgroundColor: 'blue',
-      data: [] 
+      data: []
     }
   ]
 });
@@ -54,7 +55,7 @@ const loadData = async () => {
     const [ordersRes, productsRes, usersRes] = await Promise.all([
       axios.get('http://localhost:3000/orders?status=completed'),
       axios.get('http://localhost:3000/products'),
-      axios.get('http://localhost:3000/User') 
+      axios.get('http://localhost:3000/User')
     ]);
     orders.value = ordersRes.data;
     products.value = productsRes.data;
@@ -73,34 +74,37 @@ const loadData = async () => {
 const topSellingProducts = computed(() => {
   if (products.value.length === 0 || orders.value.length === 0) return [];
 
-  const productSales = {}; 
+  const productSales = {};
 
   orders.value.forEach(order => {
     if (order.items && order.status === 'completed') {
       order.items.forEach(item => {
-        const productId = item.id;
+        const productName = item.name;
         const quantity = item.quantity;
-        if (productSales[productId]) {
-          productSales[productId] += quantity;
+        if (productSales[productName]) {
+          productSales[productName].quantity += quantity;
         } else {
-          productSales[productId] = quantity;
+          const productInfo = products.value.find(p => p.title.toLowerCase() === productName.toLowerCase());
+          productSales[productName] = {
+            quantity: quantity,
+            name: productName,
+            product: productInfo
+          };
         }
       });
     }
   });
 
-  const salesArray = Object.keys(productSales).map(productId => ({
-    productId: productId,
-    quantity: productSales[productId]
-  }));
+  const salesArray = Object.values(productSales);
 
   salesArray.sort((a, b) => b.quantity - a.quantity);
 
   return salesArray.slice(0, 5).map(sale => {
-    const productInfo = products.value.find(p => p.id === sale.productId);
+    const productInfo = sale.product; 
     return {
-      ...sale,
-      name: productInfo ? productInfo.title : 'product not xac dinh'
+      productId: productInfo ? productInfo.id : sale.name,
+      name: productInfo ? productInfo.title : 'product not xac dinh',
+      quantity: sale.quantity
     };
   });
 });
@@ -108,10 +112,10 @@ const topSellingProducts = computed(() => {
 const customerSpending = computed(() => {
   if (users.value.length === 0 || orders.value.length === 0) return [];
 
-  const spending = {}; 
+  const spending = {};
 
   orders.value.forEach(order => {
-    if (order.user_id && order.status === 'completed') { 
+    if (order.user_id && order.status === 'completed') {
       const userId = order.user_id;
       const total = order.total;
       if (spending[userId]) {
@@ -133,19 +137,19 @@ const customerSpending = computed(() => {
     const userInfo = users.value.find(u => u.id === spend.userId);
     return {
       ...spend,
-      name: userInfo ? (userInfo.username || userInfo.name) : 'Khong xac dinh duoc khach hang' 
+      name: userInfo ? (userInfo.username || userInfo.name) : 'Khong xac dinh duoc khach hang'
     };
   });
 });
 
 const prepareRevenueChartData = () => {
-  const monthlyRevenue = {}; 
+  const monthlyRevenue = {};
 
   orders.value.forEach(order => {
     if (order.status === 'completed' && order.created_at) {
       try {
         const date = new Date(order.created_at);
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const yearMonth = `${date.getFullYear()}-${month}`;
 
         if (monthlyRevenue[yearMonth]) {
@@ -154,7 +158,7 @@ const prepareRevenueChartData = () => {
           monthlyRevenue[yearMonth] = order.total;
         }
       } catch (e) {
-         console.error("Loi khi xu ly ngay:", order.created_at, e);
+        console.error("Loi khi xu ly ngay:", order.created_at, e);
       }
     }
   });
@@ -191,55 +195,56 @@ const logout = () => {
 </script>
 
 <template>
-       <div class="container py-4 border-bottom mb-5">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-          <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
-          <li class="nav-item">
-            <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">User</RouterLink>
-          </li>
-          <li class="nav-item">
-            <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History</RouterLink>
-          </li>
-          <button style="border: none;" class="navbar-toggler">
-            <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container py-4 border-bottom mb-5">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <RouterLink style="font-size: 2rem;" to="Index" class="nav-link active" aria-current="page">TBS</RouterLink>
+        <li class="nav-item">
+          <RouterLink style="margin-left: 15px;" to="user" class="nav-link" aria-current="page">User</RouterLink>
+        </li>
+        <li class="nav-item">
+          <RouterLink style="margin-left: 15px;" to="HistoryOrder" class="nav-link" aria-current="page">History
+          </RouterLink>
+        </li>
+        <button style="border: none;" class="navbar-toggler">
+          <ul style="font-size: 1rem;" class="navbar navbar-expand-lg bg-body-tertiary">
 
-              <li class="nav-item" v-if="isAdmin">
-                <RouterLink to="/product" class="nav-link">Admin</RouterLink>
-              </li>
-              <template v-if="loggedInUser">
-                <li class="nav-item">
-                  <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
-                    Hi, {{ loggedInUser.username }}
-                  </RouterLink>
-                </li>
-                <li class="nav-item">
-                  <button class="nav-link" @click="logout()">Logout</button>
-                </li>
-              </template>
-              <template v-else>
-                <li class="nav-item">
-                  <RouterLink to="/login" class="nav-link">Login</RouterLink>
-                </li>
-              </template>
-            </ul>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            </ul>
-            <div class="d-flex">
+            <li class="nav-item" v-if="isAdmin">
+              <RouterLink to="/product" class="nav-link">Admin</RouterLink>
+            </li>
+            <template v-if="loggedInUser">
               <li class="nav-item">
-                <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}
+                <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
+                  Hi, {{ loggedInUser.username }}
                 </RouterLink>
               </li>
               <li class="nav-item">
-                <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
+                <button class="nav-link" @click="logout()">Logout</button>
               </li>
-            </div>
+            </template>
+            <template v-else>
+              <li class="nav-item">
+                <RouterLink to="/login" class="nav-link">Login</RouterLink>
+              </li>
+            </template>
+          </ul>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          </ul>
+          <div class="d-flex">
+            <li class="nav-item">
+              <RouterLink class="nav-link" :to="`Userdetail/${loggedInUser.id}`">Hi, {{ loggedInUser.username }}
+              </RouterLink>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link active" aria-current="page" to="Login" @click="logout()">Logout</button>
+            </li>
           </div>
         </div>
-      </nav>
-    </div>
+      </div>
+    </nav>
+  </div>
   <div class="container mt-4 mb-5">
     <h1>Chart</h1>
 
@@ -247,7 +252,7 @@ const logout = () => {
     <div v-if="error" class="alert alert-danger">{{ error }}</div>
 
     <div v-if="!loading && !error">
-      
+
       <section class="mt-5">
         <h2>Top 5 produc sell a lot</h2>
         <table class="table table-striped table-hover">
@@ -265,9 +270,9 @@ const logout = () => {
             <tr v-for="(product, index) in topSellingProducts" :key="product.productId">
               <th scope="row">{{ index + 1 }}</th>
               <td>
-                 <router-link :to="`/product-detail/${product.productId}`">
-                    {{ product.name }}
-                 </router-link>
+                <router-link :to="`/product-detail/${product.productId}`">
+                  {{ product.name }}
+                </router-link>
               </td>
               <td>{{ product.quantity }}</td>
             </tr>
@@ -288,13 +293,15 @@ const logout = () => {
             </tr>
           </thead>
           <tbody>
-             <tr v-if="customerSpending.length === 0">
+            <tr v-if="customerSpending.length === 0">
               <td colspan="3" class="text-center text-muted">not have data khach hang.</td>
             </tr>
             <tr v-for="(customer, index) in customerSpending" :key="customer.userId">
               <th scope="row">{{ index + 1 }}</th>
               <td>{{ customer.name }} (ID: {{ customer.userId }})</td>
-              <td>{{ customer.totalSpending.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) }}</td>
+              <td>{{ customer.totalSpending.toLocaleString('en-US', {
+                minimumFractionDigits: 2, maximumFractionDigits: 2
+              }) }}</td>
             </tr>
           </tbody>
         </table>
@@ -304,14 +311,14 @@ const logout = () => {
 
       <section>
         <h2>char (month)</h2>
-        <div style="height: 400px"> <Bar v-if="revenueChartData.labels.length > 0" 
-                :data="revenueChartData" 
-                :options="revenueChartOptions" />
-           <div v-else class="text-muted text-center mt-5">not data chart total sell</div>
+        <div style="height: 400px">
+          <Bar v-if="revenueChartData.labels.length > 0" :data="revenueChartData" :options="revenueChartOptions" />
+          <div v-else class="text-muted text-center mt-5">not data chart total sell</div>
         </div>
       </section>
 
-    </div> </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>

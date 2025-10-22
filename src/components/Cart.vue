@@ -94,7 +94,6 @@ const handleSubmit = async () => {
     }
   } catch (error) {
     console.error("Error order:", error);
-    alert("Error");
   }
 };
 

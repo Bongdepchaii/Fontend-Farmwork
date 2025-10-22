@@ -89,30 +89,38 @@ const topSellingProducts = computed(() => {
   completedOrders.value.forEach(order => {
     if (order.items) {
       order.items.forEach(item => {
-        const productId = item.id;
+        const productName = item.name;
         const quantity = item.quantity;
-        if (productSales[productId]) {
-          productSales[productId] += quantity;
+        if (productSales[productName]) {
+          productSales[productName].quantity += quantity
         } else {
-          productSales[productId] = quantity;
+          const productInfo = allProducts.value.find(p => p.title.toLowerCase() === productName.toLowerCase());
+
+          productSales[productName] = {
+            quantity: quantity,
+            name: productName,
+            // Lưu thông tin sản phẩm gốc tìm được
+            product: productInfo
+          }
         }
       });
     }
   });
 
-  const salesArray = Object.keys(productSales).map(productId => ({
-    productId: productId,
-    quantity: productSales[productId]
-  }));
+  const salesArray = Object.values(productSales);
+
 
   salesArray.sort((a, b) => b.quantity - a.quantity);
 
+  // <-- SỬA 3: Map lại dữ liệu cuối cùng
   return salesArray.slice(0, 5).map(sale => {
-    const productInfo = allProducts.value.find(p => p.id === sale.productId);
+    const productInfo = sale.product; // Lấy thông tin sản phẩm đã tìm
     return {
-      ...sale,
-      name: productInfo ? productInfo.title : 'N/A',
-      image: productInfo ? productInfo.image : '',
+      // Lấy ID đúng từ sản phẩm gốc để RouterLink hoạt động
+      productId: productInfo ? productInfo.id : sale.name,
+      quantity: sale.quantity,
+      name: productInfo ? productInfo.title : sale.name, // 'N/A' nếu vẫn không có
+      image: productInfo ? productInfo.image : '', // Ảnh trống nếu không có
     };
   });
 });
@@ -233,12 +241,13 @@ div nav li {
   list-style: none;
 }
 
- img {
+img {
   height: 200px;
   object-fit: contain;
   /* GIUP ANH KHONG BI VO KHI CAO BANG NHAU */
   width: 100%;
 }
+
 .top-seller-title {
   min-height: 3em;
   overflow: hidden;
@@ -302,6 +311,11 @@ div nav li {
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
               <template v-if="loggedInUser">
                 <li class="nav-item">
+                  <RouterLink class="nav-link" :to="`/favorite/${loggedInUser.id}`">
+                    Favorite
+                  </RouterLink>
+                </li>
+                <li class="nav-item">
                   <RouterLink class="nav-link" :to="`/userdetail/${loggedInUser.id}`">
                     Hi, {{ loggedInUser.username }}
                   </RouterLink>
@@ -323,23 +337,24 @@ div nav li {
     </div>
     <div class="container py-2">
       <section class="mb-5">
-        <h2 class="text-center mb-4">Top 5 San Pham Ban Chay</h2>
-        
+        <h2 class="text-center mb-4">Product Sell a lot</h2>
+
         <div v-if="loadingTopSellers" class="text-center">
           <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Dang tai...</span>
+            <span class="visually-hidden">Dang load...</span>
           </div>
         </div>
 
         <div v-else>
           <div v-if="topSellingProducts.length > 0" class="row row-cols-1 row-cols-md-3 row-cols-lg-5 g-4">
-            
+
             <div v-for="(product) in topSellingProducts" :key="product.productId" class="col">
               <div class="card h-100 shadow-sm text-center">
-                <RouterLink :to="`/product-detail/${product.productId}`" class="text-decoration-none text-dark d-flex flex-column h-100">
-                  
+                <RouterLink :to="`/product-detail/${product.productId}`"
+                  class="text-decoration-none text-dark d-flex flex-column h-100">
+
                   <img :src="product.image" class="card-img-top p-3 top-seller-img" :alt="product.name">
-                  
+
                   <div class="card-body p-2 d-flex flex-column">
                     <h6 class="card-title small top-seller-title">{{ product.name }}</h6>
                     <p class="card-text text-danger fw-bold mt-auto mb-0">Da ban: {{ product.quantity }}</p>
@@ -349,7 +364,7 @@ div nav li {
             </div>
 
           </div>
-          
+
           <div v-else class="alert alert-info text-center">
             Chua co du lieu san pham ban chay.
           </div>
@@ -380,7 +395,7 @@ div nav li {
                   <span class="badge text-bg-secondary float-end">{{ Item.category }}</span>
                 </p>
                 <p style="margin-bottom: 15px;" class="card-text">quantity
-                  <span class="badge text-bg-info float-end">{{ Item.quantity }}</span>
+                  <span class="badge text-bg-info float-end">{{ Item.quantity || "Het hang" }}</span>
                 </p>
               </RouterLink>
               <div class="mt-auto d-flex justify-content-between align-items-center">
