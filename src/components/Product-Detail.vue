@@ -11,6 +11,8 @@ const store = useStore();
 const product = reactive({});
 const productCategory = ref([]);
 const feedbacks = ref([]);
+const comment = ref('');
+const comments = ref([]);
 
 
 const loadProductData = async (productId) => {
@@ -20,6 +22,7 @@ const loadProductData = async (productId) => {
             Object.assign(product, response.data);
             await loadRelatedProducts(product.category, product.id);
             await loadFeedbacks(productId);
+            await loadComments(productId);
         }
     }
 };
@@ -35,14 +38,24 @@ watch(() => route.params.id, async (idnew) => {
     }
 });
 
+const loadComments = async (productId) => {
+    if (!productId) return;
+    try {
+        const response = await axios.get(`http://localhost:3000/comment?productId=${productId}`);
+        if (response.status === 200) {
+            comments.value = response.data; 
+        }
+    } catch (error) {
+        console.error("Loi khi tai binh luan:", error);
+    }
+};
+
 const loadFeedbacks = async (productId) => {
     if (!productId) return;
     try {
-        // GOI API TRUC TIEP DE LAY FEEDBACK THEO PRODUCTID
         const response = await axios.get(`http://localhost:3000/feedback?productId=${productId}`);
-        // KHONG CAN _expand=order HAY LOC O CLIENT NUA
 
-        feedbacks.value = response.data; // GAN TRUC TIEP KET QUA
+        feedbacks.value = response.data;
 
     } catch (error) {
         console.error("Loi khi tai danh gia:", error);
@@ -86,6 +99,36 @@ const loggedInUser = computed(() => {
     return null;
 });
 
+const submitComment = async () => {
+    if (!loggedInUser.value) {
+        alert('you not login? login now!');
+        router.push('/login');
+        return;
+    }
+    if (!comment.value || comment.value.trim() === '') {
+        alert('text not empty.');
+        return;
+    }
+    const payload = {
+        productId: product.id,
+        userId: loggedInUser.value.id,
+        username: loggedInUser.value.username,
+        text: comment.value,
+        created_at: new Date().toISOString()
+    };
+
+    try {
+        const response = await axios.post('http://localhost:3000/comment', payload);
+        if (response.status === 201) {
+            await loadComments(product.id);
+            comment.value = '';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error comment.');
+    }
+};
+
 const addToFavorites = async (product) => {
 
     if (!loggedInUser.value) {
@@ -125,7 +168,7 @@ const addProductToCart = async (product) => {
 
     if (product.quantity <= 0) {
         alert("Product het hang not order");
-        return; // Dừng hàm
+        return;
     }
 
     try {
@@ -142,6 +185,7 @@ const addProductToCart = async (product) => {
         alert("error xay ra khi them vao gio.");
     }
 };
+
 
 </script>
 
@@ -165,7 +209,8 @@ const addProductToCart = async (product) => {
                                     <strong>not empty product</strong>.
                                 </div>
                                 <div v-else-if="product.quantity <= 3" class="alert alert-warning" role="alert">
-                                    Almost out of stock! Shop have quantity <strong>{{ product.quantity }}</strong> product!
+                                    Almost out of stock! Shop have quantity <strong>{{ product.quantity }}</strong>
+                                    product!
                                 </div>
                             </div>
 
@@ -177,19 +222,46 @@ const addProductToCart = async (product) => {
                             </button>
                             <button style="margin-left: 15px;" @click="addToFavorites(product)"
                                 class="btn btn-outline-danger" title="Yêu thích">
-                                Thêm vào Yêu thích
+                                Add to favorite
                             </button>
-                            <button  v-if="product.quantity > 0" style="margin-left: 15px;" @click="addProductToCart(product)" class="btn"
+                            <button v-if="product.quantity > 0" style="margin-left: 15px;"
+                                @click="addProductToCart(product)" class="btn"
                                 :class="product.quantity > 0 ? 'btn-success' : 'btn-secondary'"
                                 :disabled="product.quantity <= 0">
-                                <span >Add to cart</span>
+                                <span>Add to cart</span>
                             </button>
-                            <span v-else  style="margin-left: 15px;" class="alert alert-warning" >Hết hàng</span>
+                            <span v-else style="margin-left: 15px;" class="alert alert-warning">not order</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="product-reviews mt-5">
+            <h2 class="mb-4">Comment</h2>
+            <form @submit.prevent="submitComment" class="mb-4">
+                <div class="mb-3">
+                    <label for="commentText" class="form-label">Text comment</label>
+                    <textarea v-model="comment" class="form-control" id="commentText" rows="3"
+                        placeholder="Enter the text"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Sent</button>
+            </form>
+            <div v-if="comments.length > 0">
+                <div v-for="c in comments" :key="c.id" class="card mb-3 shadow-sm">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h5 class="card-title mb-1">{{ c.username }}</h5>
+                            <small class="text-muted">{{ formatDate(c.created_at) }}</small>
+                        </div>
+                        <p class="card-text mt-2">{{ c.text }}</p>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <p class="alert alert-primary">No anymore comment product here!.</p>
+            </div>
+        </div>
+        <hr>
         <div class="product-reviews mt-5">
             <h2 class="mb-4">Feed back!</h2>
             <div v-if="feedbacks.length > 0">
@@ -207,6 +279,7 @@ const addProductToCart = async (product) => {
                 <p class="text-muted">not empty feed back product here</p>
             </div>
         </div>
+        <hr>
         <div v-if="productCategory.length > 0" class="related-products mt-5">
             <h2 class="mb-4">Prouduct lien quan</h2>
             <div class="row">
@@ -232,7 +305,7 @@ const addProductToCart = async (product) => {
 
 <style scoped>
 .product-detail-card {
-    border: none; 
+    border: none;
     padding: 1.5rem;
 }
 

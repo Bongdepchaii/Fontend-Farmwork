@@ -11,6 +11,7 @@ const product = reactive({
   image: '',
   category: '',
   price: '',
+  quantity: '',
 })
 
 
@@ -45,6 +46,7 @@ const editproduct = (item) => {
     item.image,
     item.category,
     item.price,
+    item.quantity,
     item.description
   Object.assign(product, item)
   edit.value = true
@@ -93,6 +95,7 @@ const handleSubmit = async () => {
     const payload = {
       title: product.title,
       price: product.price,
+      quantity: product.quantity,
       image: product.image,
       category: product.category,
       description: product.description,
@@ -117,6 +120,7 @@ const clearData = () => {
     id: '',
     title: '',
     price: '',
+    quantity: '',
     category: '',
     image: '',
     description: ''
@@ -253,6 +257,7 @@ const reset = () => {
                       <th>Title</th>
                       <th style="width:140px">Category</th>
                       <th style="width:120px" class="text-end">Price</th>
+                      <th style="width:120px" class="text-end">Quantity</th>
                       <th style="width:120px" class="text-end">Action</th>
                     </tr>
                   </thead>
@@ -262,6 +267,7 @@ const reset = () => {
                       <td>{{ item.title }}</td>
                       <td><span class="badge text-bg-dark">{{ item.category }}</span></td>
                       <td class="text-end">{{ item.price }} $</td>
+                      <td class="text-end">{{ item.quantity }}</td>
                       <td class="text-end"><button @click="editproduct(item)" href="#editForm"
                           class="btn btn-sm btn-outline-primary" style="margin-right: 4px;">Edit
                         </button>
@@ -290,6 +296,11 @@ const reset = () => {
                   <label for="pPrice" class="form-label">Price (USD)</label>
                   <input v-model="product.price" type="number" class="form-control" id="pPrice" name="price" step="0.01"
                     min="0" placeholder="0.00" required>
+                </div>
+                <div class="mb-3">
+                  <label for="pPrice" class="form-label">Quantity</label>
+                  <input v-model="product.quantity" type="number" class="form-control" id="pPrice" name="price" step="0.01"
+                    min="0" placeholder="enter quantity" required>
                 </div>
                 <div class="mb-3">
                   <label for="pCategory" class="form-label">Category</label>

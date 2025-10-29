@@ -12,7 +12,7 @@ const Product = ref([])
 const total = ref(0)
 const search = ref('')
 const page = ref(1)
-const pagesize = 12
+const pagesize = 20
 
 const categories = ref([])
 const selectedCategory = ref('')
@@ -39,31 +39,26 @@ const fetchCategories = async () => {
 
 const loaddata = async () => {
   try {
-    const params = { _page: page.value, _limit: pagesize }
-    if (search.value) params.title_like = search.value
-    if (selectedCategory.value) params.category = selectedCategory.value
-    const response = await axios.get('http://localhost:3000/products', { params })
-    Product.value = response.data
+    const response = await axios.get('http://localhost:3000/products');
+    let products = response.data;
 
-    // console.log('response.headers:', response.headers)
-
-    let totalCount = response.headers && response.headers['x-total-count']
-      ? parseInt(response.headers['x-total-count'])
-      : null
-
-    if (!totalCount) {
-      const countParams = { ...params }
-      delete countParams._page
-      delete countParams._limit
-      const allRes = await axios.get('http://localhost:3000/products', { params: countParams })
-      totalCount = Array.isArray(allRes.data) ? allRes.data.length : (Product.value.length || 0)
+    if (search.value.trim() !== '') {
+      const keyword = search.value.trim().toLowerCase();
+      products = products.filter(p =>
+        p.title.toLowerCase().includes(keyword)
+      );
     }
 
-    total.value = totalCount
+    if (selectedCategory.value) {
+      products = products.filter(p => p.category === selectedCategory.value);
+    }
+
+    Product.value = products;
+    total.value = products.length;
   } catch (error) {
-    console.error('Error load page:', error)
+    console.error('Error load page:', error);
   }
-}
+};
 
 const loadDataForTopSellers = async () => {
   loadingTopSellers.value = true;
@@ -99,7 +94,6 @@ const topSellingProducts = computed(() => {
           productSales[productName] = {
             quantity: quantity,
             name: productName,
-            // Lưu thông tin sản phẩm gốc tìm được
             product: productInfo
           }
         }
@@ -112,15 +106,13 @@ const topSellingProducts = computed(() => {
 
   salesArray.sort((a, b) => b.quantity - a.quantity);
 
-  // <-- SỬA 3: Map lại dữ liệu cuối cùng
   return salesArray.slice(0, 5).map(sale => {
-    const productInfo = sale.product; // Lấy thông tin sản phẩm đã tìm
+    const productInfo = sale.product;
     return {
-      // Lấy ID đúng từ sản phẩm gốc để RouterLink hoạt động
       productId: productInfo ? productInfo.id : sale.name,
       quantity: sale.quantity,
-      name: productInfo ? productInfo.title : sale.name, // 'N/A' nếu vẫn không có
-      image: productInfo ? productInfo.image : '', // Ảnh trống nếu không có
+      name: productInfo ? productInfo.title : sale.name,
+      image: productInfo ? productInfo.image : '',
     };
   });
 });
@@ -200,7 +192,7 @@ const goToCart = () => {
 // favorite
 const addToFavorites = async (product) => {
   if (!loggedInUser.value) {
-    if (confirm('Bạn cần đăng nhập để thêm vào yêu thích! Đăng nhập ngay?')) {
+    if (confirm('you not login? login now!')) {
       router.push('/login')
     }
   } else {
@@ -218,11 +210,11 @@ const addToFavorites = async (product) => {
       const response = await axios.post('http://localhost:3000/favorite', payload);
 
       if (response.status === 201) {
-        alert(`Đã thêm "${product.title}" vào danh sách yêu thích!`);
+        alert(`you add "${product.title}" to favorite!`);
       }
     } catch (error) {
-      console.error('LỖI KHI THÊM VÀO YÊU THÍCH:', error);
-      alert('Có lỗi xảy ra, vui lòng thử lại.');
+      console.error('Error favorite:', error);
+      alert('Error favorite try again.');
     }
   }
 };
@@ -305,7 +297,7 @@ img {
 
             <form class="d-flex mx-auto" role="search" @submit.prevent="loaddata">
               <input v-model="search" class="form-control me-2" type="search" placeholder="search..." />
-              <button class="btn btn-outline-success" type="submit">Search</button>
+              <!-- <button class="btn btn-outline-success" type="submit">Search</button> -->
             </form>
 
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0 d-flex align-items-center">
@@ -357,7 +349,7 @@ img {
 
                   <div class="card-body p-2 d-flex flex-column">
                     <h6 class="card-title small top-seller-title">{{ product.name }}</h6>
-                    <p class="card-text text-danger fw-bold mt-auto mb-0">Da ban: {{ product.quantity }}</p>
+                    <p class="card-text text-danger fw-bold mt-auto mb-0">Sale: {{ product.quantity }}</p>
                   </div>
                 </RouterLink>
               </div>
